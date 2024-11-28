@@ -104,6 +104,25 @@ class UserManager extends DbManager implements I_User {
         }
     }
 
+    public function activateUser($token): bool {
+        $this->getDB()->beginTransaction();
+        try {
+            $sqlUpdate = "UPDATE user SET activated = true WHERE id = (SELECT user_id FROM token WHERE content = :token);";
+            $stmtUpdate = $this->getDB()->prepare($sqlUpdate);
+            $stmtUpdate->bindParam('token', $token, \PDO::PARAM_STR);
+            $stmtUpdate->execute();
+            $sqlDelete = "DELETE FROM token WHERE content = :token;";
+            $stmtDelete = $this->getDB()->prepare($sqlDelete);
+            $stmtDelete->bindParam('token', $token, \PDO::PARAM_STR);
+            $stmtDelete->execute();
+            $this->getDB()->commit();
+            return true;
+        } catch (\PDOException $e) {
+            $this->getDB()->rollBack();
+            $e->getMessage();
+            return false;
+        }
+    }
     public function getAllUsers():array {
         $sql = "SELECT id, pseudonym, created_at, cover, role FROM user;";
         $stmt = $this->getDB()->prepare($sql);
@@ -151,7 +170,7 @@ class UserManager extends DbManager implements I_User {
         $sql = "UPDATE user SET pseudonym = :pseudonym WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
         try {
-            $stmt->execute();
+            $stmt->execute($datas);
             if($stmt->rowCount() > 0){
                 return true;
             }else{
@@ -171,7 +190,7 @@ class UserManager extends DbManager implements I_User {
         $sql = "UPDATE user SET password = :password WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
         try {
-            $stmt->execute();
+            $stmt->execute($datas);
             if($stmt->rowCount() > 0){
                 return true;
             }else{
@@ -191,7 +210,7 @@ class UserManager extends DbManager implements I_User {
         $sql = "UPDATE user SET cover = :cover WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
         try {
-            $stmt->execute();
+            $stmt->execute($datas);
             if($stmt->rowCount() > 0){
                 return true;
             }else{
@@ -211,7 +230,7 @@ class UserManager extends DbManager implements I_User {
         $sql = "UPDATE user SET role = :role WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
         try {
-            $stmt->execute();
+            $stmt->execute($datas);
             if($stmt->rowCount() > 0){
                 return true;
             }else{
@@ -229,14 +248,10 @@ class UserManager extends DbManager implements I_User {
         $stmt->bindParam('id', $id, \PDO::PARAM_INT);
         try {
             $stmt->execute();
-            if($stmt->rowCount() > 0){
-                return true;
-            }else{
-                return false;
-            }
         } catch (PDOException $e) {
             $e->getMessage();
             return false;
-        }   
+        }
+        return true;  
     }
 }
