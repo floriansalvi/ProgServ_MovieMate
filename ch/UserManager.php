@@ -2,6 +2,8 @@
 
 namespace ch;
 
+require_once 'lib/vendor/autoload.php';
+
 use Exception;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
@@ -83,7 +85,7 @@ class UserManager extends DbManager implements I_User {
             'user_id' => $id,
             'content' => bin2hex(random_bytes(16))
         ];
-        $sql = "INSERT INTO token (user_id, content) VALUE "."(:user_id, :content);";
+        $sql = "INSERT INTO token (user_id, content) VALUES "."(:user_id, :content);";
         $this->getDB()->prepare($sql)->execute($tokenDatas);
         return $tokenDatas['content'];
     }
@@ -182,10 +184,10 @@ class UserManager extends DbManager implements I_User {
         }  
     }
 
-    public function updatePassword($userId, $newPassword): bool {
+    public function updatePassword($userId, $newHashedPassword): bool {
         $datas = [
             'id'=> $userId,
-            'password'=>$newPassword
+            'password'=>$newHashedPassword
         ];
         $sql = "UPDATE user SET password = :password WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);

@@ -13,11 +13,10 @@ class DbManager {
         $password = $config['password'];
         $this->db = new \PDO($dsn, $username, $password);
         if(!$this->db){
-
+            die('La connexion à la base de données n\'a pas pu être établie.');
         }else{
-            die('La connexion à la base de données n\'a pas pu être établie.')
-        }
             $this->createTables_SQLITE();
+        };
     }
 
     //Creation des différentes tables de la DB

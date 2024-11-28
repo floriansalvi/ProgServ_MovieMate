@@ -12,7 +12,7 @@ interface I_User {
     public function getAllUsers():array;
     public function getUserDatas($email, $password):array;
     public function updatePseudonym($userId, $newPseudonym):bool;
-    public function updatePassword($userId, $newPassword):bool;
+    public function updatePassword($userId, $newHashedPassword):bool;
     public function updateProfileCover($userId, $newCoverId):bool;
     public function updateRole($userId, $role):bool;
     public function deleteUser($id):bool;
