@@ -77,4 +77,8 @@ class DbManager {
         }
         return $created;
     }
+
+    public function getDB():\PDO{
+        return $this->db;
+    }
 }
