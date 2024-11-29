@@ -3,6 +3,7 @@
 namespace ch;
 
 require_once 'lib/vendor/autoload.php';
+require_once 'config/base_url.php';
 
 use Exception;
 use Symfony\Component\Mailer\Transport;
@@ -97,7 +98,7 @@ class UserManager extends DbManager implements I_User {
         ->from('admin@movie-mate.ch')
         ->to($email)
         ->subject('Inscription à MovieMate')
-        ->html('<h1>Bienvenue sur MovieMate</h1><br><p>Cliquez sur le lien ci-dessous afin de valider votre inscription</p><br><a href="http://localhost:8888/ProgServ_MovieMate/activation.php?token=' . urlencode($token) . '">Activer votre compte</a>');
+        ->html('<h1>Bienvenue sur MovieMate</h1><br><p>Cliquez sur le lien ci-dessous afin de valider votre inscription</p><br><a href="' . BASE_URL . 'activation.php?token=' . urlencode($token) . '">Activer votre compte</a>');
         $result = $mailer->send($message);
         if($result===null){
             return true;

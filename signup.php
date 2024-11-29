@@ -1,7 +1,13 @@
 <?php
 
 session_start();
-require_once('./controllers/signupValidation.php');
+
+require_once './controllers/signupValidation.php';
+require_once 'config/base_url.php';
+
+if(isset($_SESSION['is_logged'])){
+    header("Location: " . BASE_URL);
+}
 
 $title = "Inscription";
 
@@ -41,7 +47,7 @@ ob_start(); ?>
             <?php echo $passwordConfErr; ?>
         </div>
             <button type="submit" name="signup" class="button">Créer le compte</button>
-            <p class="message">Déjà un compte? <a href="login.php" class="button">Se connecter</a></p>
+            <p class="message">Déjà un compte? <a href="<?php echo BASE_URL . 'login.php'?>" class="button">Se connecter</a></p>
         </form>
     </main>
 

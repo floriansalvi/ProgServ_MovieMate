@@ -17,6 +17,8 @@ if(filter_has_var(INPUT_POST, 'signup')) {
 
     $db = new UserManager();
 
+    $db->saveUser($pseudonym, $firstname, $lastname, $email, $password);
+
 //Pseudo pseudo (used, length, caract)
 
 //Firstname validation (length, caract)
@@ -28,10 +30,6 @@ if(filter_has_var(INPUT_POST, 'signup')) {
 //password validation (length, caract, strength)
 
 //password conf validation (same as password)
-
-
-
-
 
 }
 
