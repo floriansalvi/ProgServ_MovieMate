@@ -24,7 +24,7 @@ class DbManager {
         $sql = <<<COMMAND_SQL
             CREATE TABLE IF NOT EXISTS user (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                pseudonym VARCHAR(32) NOT NULL UNIQUE,
+                username VARCHAR(32) NOT NULL UNIQUE,
                 firstname VARCHAR(32) NOT NULL,
                 lastname VARCHAR(32) NOT NULL,
                 email VARCHAR(48) NOT NULL UNIQUE,

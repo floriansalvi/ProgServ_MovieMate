@@ -17,9 +17,9 @@ ob_start(); ?>
     <form action="" method="post" class="form" id="signUp">
         <h2>Inscription</h2>
         <div>
-            <label for="pseudonym">Pseudo</label>
-            <input type="text" placeholder="JohnDoe025" name="pseudonym" class="pseudonym">
-            <?php echo $pseudonymErr; ?>
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" placeholder="JohnDoe025" name="username" class="username">
+            <?php echo $usernameErr; ?>
         </div>
         <div>
             <label for="firstname">Prénom</label>

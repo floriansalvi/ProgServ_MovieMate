@@ -28,10 +28,10 @@ class UserManager extends DbManager implements I_User {
         return $stmt->fetchColumn() > 0;
     }
 
-    public function isPseudonymUsed($pseudonym):bool {
-        $sql = "SELECT COUNT(*) FROM user WHERE pseudonym = :pseudonym;";
+    public function isUserNameUsed($username):bool {
+        $sql = "SELECT COUNT(*) FROM user WHERE username = :username;";
         $stmt = $this->getDB()->prepare($sql);
-        $stmt->bindParam('pseudonym', $pseudonym, \PDO::PARAM_STR);
+        $stmt->bindParam('username', $username, \PDO::PARAM_STR);
         try {
             $stmt->execute();
         } catch (PDOException $e) {
@@ -40,12 +40,12 @@ class UserManager extends DbManager implements I_User {
         return $stmt->fetchColumn() > 0;        
     }
 
-    public function saveUser($pseudonym, $firstname, $lastname, $email, $password):bool {
+    public function saveUser($username, $firstname, $lastname, $email, $password):bool {
         $saved = false;
         $creationTime = date("Y-m-d H:i:s");
-        if(!empty($pseudonym) && !empty($firstname) && !empty($lastname) && !empty($email) && !empty($password)){
+        if(!empty($username) && !empty($firstname) && !empty($lastname) && !empty($email) && !empty($password)){
             $datas = [
-                'pseudonym' => $pseudonym,
+                'username' => $username,
                 'firstname' => $firstname,
                 'lastname' => $lastname,
                 'email' => $email,
@@ -55,7 +55,7 @@ class UserManager extends DbManager implements I_User {
                 'cover' => 0,
                 'role' => ""
             ];
-            $sql = "INSERT INTO user (pseudonym, firstname, lastname, email, password, created_at, activated, cover, role) VALUES "."(:pseudonym, :firstname, :lastname, :email, :password, :created_at, :activated, :cover, :role);";
+            $sql = "INSERT INTO user (username, firstname, lastname, email, password, created_at, activated, cover, role) VALUES "."(:username, :firstname, :lastname, :email, :password, :created_at, :activated, :cover, :role);";
             $stmt = $this->getDB()->prepare($sql);
             try {
                 $stmt->execute($datas);
@@ -127,7 +127,7 @@ class UserManager extends DbManager implements I_User {
         }
     }
     public function getAllUsers():array {
-        $sql = "SELECT id, pseudonym, created_at, cover, role FROM user;";
+        $sql = "SELECT id, username, created_at, cover, role FROM user;";
         $stmt = $this->getDB()->prepare($sql);
         try {
             $stmt->execute();
@@ -165,12 +165,12 @@ class UserManager extends DbManager implements I_User {
         return $datas[0];
     }
 
-    public function updatePseudonym($userId, $newPseudonym):bool {
+    public function updateUsername($userId, $newUsername):bool {
         $datas = [
             'id'=> $userId,
-            'pseudonym'=> $newPseudonym
+            'username'=> $newUsername
         ];
-        $sql = "UPDATE user SET pseudonym = :pseudonym WHERE id = :id;";
+        $sql = "UPDATE user SET username = :username WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
         try {
             $stmt->execute($datas);
