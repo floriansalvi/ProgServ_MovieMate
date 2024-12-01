@@ -138,10 +138,10 @@ class UserManager extends DbManager implements I_User {
         return $datas;
     }
 
-    public function getUserDatas($email, $password): array {
-        $sql = "SELECT * FROM user WHERE email = :email;";
+    public function getUserDatas($username, $password): array {
+        $sql = "SELECT * FROM user WHERE username = :username;";
         $stmt = $this->getDB()->prepare($sql);
-        $stmt->bindParam('email', $email, \PDO::PARAM_STR);
+        $stmt->bindParam('username', $username, \PDO::PARAM_STR);
         try {
             $stmt->execute();
         } catch (PDOException $e) {
@@ -149,16 +149,16 @@ class UserManager extends DbManager implements I_User {
         }  
         $datas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         if(!$datas) {
-            $datas[0]["email_ok"] = false;
+            $datas[0]["username_ok"] = false;
             $datas[0]["password_ok"] = false;
         } else {
             if(!password_verify($password, $datas[0]["password"])) {
                 unset($datas[0]["password"]);
-                $datas[0]["email_ok"] = true;
+                $datas[0]["username_ok"] = true;
                 $datas[0]["password_ok"] = false;
             } else {
                 unset($datas[0]["password"]);
-                $datas[0]["email_ok"] = true;
+                $datas[0]["username_ok"] = true;
                 $datas[0]["password_ok"] = true;
             }
         }

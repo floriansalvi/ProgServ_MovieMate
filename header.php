@@ -9,8 +9,14 @@
     </nav>
     <div id="log_section">
         <ul>
-            <li>Se connecter</li>
-            <li>S'inscrire</li>
+            <?php
+                if(isset($_SESSION['is_logged'])){
+                    echo "
+                        <li><a href='#'>Profil</a></li>
+                        <li><a href=''>Déconnexion</a></li>
+                    ";
+                }
+            ?>
         </ul>
     </div>
 </header>

@@ -16,7 +16,7 @@ ob_start(); ?>
 <main class="main-activation">
     <div>
         <h2>Activation de votre compte</h2>
-        <p><?php echo $message?></p>
+        <?php echo $message ?>
     </div>
 </main>
 

@@ -10,7 +10,7 @@ interface I_User {
     public function sendVerificationMail($email, $token):bool;
     public function activateUser($token):bool;
     public function getAllUsers():array;
-    public function getUserDatas($email, $password):array;
+    public function getUserDatas($username, $password):array;
     public function updateUsername($userId, $newUsername):bool;
     public function updatePassword($userId, $newHashedPassword):bool;
     public function updateProfileCover($userId, $newCoverId):bool;
