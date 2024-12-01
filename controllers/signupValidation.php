@@ -113,7 +113,7 @@ if(filter_has_var(INPUT_POST, 'signup')) {
         if(!$isUserSaved){
             throw new Exception("L'inscription n'a pas pu être effectuée.");
         }else{
-            header("Location: " . BASE_URL . "confirmation.php");
+            header("Location: " . BASE_URL . "confirmation.php" . "?username=" . urlencode($username));
         }
     }
 }

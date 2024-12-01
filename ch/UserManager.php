@@ -119,7 +119,7 @@ class UserManager extends DbManager implements I_User {
             $stmtDelete->bindParam('token', $token, \PDO::PARAM_STR);
             $stmtDelete->execute();
             $this->getDB()->commit();
-            return true;
+            return $stmtUpdate->rowCount() == 1;
         } catch (\PDOException $e) {
             $this->getDB()->rollBack();
             $e->getMessage();
