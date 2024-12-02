@@ -185,64 +185,37 @@ class UserManager extends DbManager implements I_User {
         }  
     }
 
-    public function updatePassword($userId, $newHashedPassword): bool {
+    private function updateField($userId, $field, $value):bool {
         $datas = [
-            'id'=> $userId,
-            'password'=>$newHashedPassword
+            'id' => $userId,
+            $field => $value
         ];
-        $sql = "UPDATE user SET password = :password WHERE id = :id;";
+        $sql = "UPDATE user SET $field = :$field WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
         try {
             $stmt->execute($datas);
-            if($stmt->rowCount() > 0){
+            if($stmt->rowCount()>0){
                 return true;
             }else{
                 return false;
             }
-        } catch (PDOException $e) {
+        } catch (\PDOException $e){
             $e->getMessage();
             return false;
-        }        
+        }
+    }
+
+    public function updatePassword($userId, $newHashedPassword): bool {
+        return $this->updateField($userId, 'password', $newHashedPassword);     
     }
 
     public function updateProfileCover($userId, $newCoverId):bool {
-        $datas = [
-            'id'=> $userId,
-            'cover'=>$newCoverId
-        ];
-        $sql = "UPDATE user SET cover = :cover WHERE id = :id;";
-        $stmt = $this->getDB()->prepare($sql);
-        try {
-            $stmt->execute($datas);
-            if($stmt->rowCount() > 0){
-                return true;
-            }else{
-                return false;
-            }
-        } catch (PDOException $e) {
-            $e->getMessage();
-            return false;
-        }         
+        return $this->updateField($userId, 'cover', $newCoverId);     
+      
     }
 
     public function updateRole($userId, $role): bool {
-        $datas = [
-            'id'=> $userId,
-            'role'=>$role
-        ];
-        $sql = "UPDATE user SET role = :role WHERE id = :id;";
-        $stmt = $this->getDB()->prepare($sql);
-        try {
-            $stmt->execute($datas);
-            if($stmt->rowCount() > 0){
-                return true;
-            }else{
-                return false;
-            }
-        } catch (PDOException $e) {
-            $e->getMessage();
-            return false;
-        }       
+        return $this->updateField($userId, 'role', $role);     
     }
 
     public function deleteUser($id):bool {

@@ -9,7 +9,8 @@ require_once './config/base_url.php';
         <ul>
             <?php
                 echo "
-                    <li>Films</li>
+                    <li><a href='" . BASE_URL . "'>Accueil</a></li>
+                    <li><a href='" . BASE_URL . "movies.php'>Films</a></li>
                     <li><a href='" . BASE_URL . "categories.php'>Catégories</a></li>
                 ";
             ?>
@@ -17,7 +18,6 @@ require_once './config/base_url.php';
     </nav>
     <div id="log_section">
         <ul>
-            <li><a href="<?php echo BASE_URL ?>">Accueil</a></li>
             <?php
                 if(!isset($_SESSION['is_logged'])){
                     echo "

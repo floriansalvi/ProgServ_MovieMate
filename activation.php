@@ -1,14 +1,10 @@
 <?php
-
 session_start();
-
 require_once './controllers/activationValidation.php';
 require_once 'config/base_url.php';
-
 if(isset($_SESSION['is_logged'])){
     header("Location: " . BASE_URL);
 }
-
 $title = "Activation";
 
 ob_start(); ?>

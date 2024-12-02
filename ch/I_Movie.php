@@ -9,6 +9,7 @@ interface I_Movie {
     public function getGenreMovies($genreId):array;
     public function getBestRatedMovies():array;
     public function getMovieDatas($movieId):array;
+    private function updateField($movieId, $field, $value);
     public function updateTitle($movieId, $newTitle):bool;
     public function updateDescription($movieId, $newDescription):bool;
     public function updateRealisator($movieId, $newRealisator):bool;

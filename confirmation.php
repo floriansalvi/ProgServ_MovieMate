@@ -1,15 +1,10 @@
 <?php
-
 session_start();
-
 require_once 'config/base_url.php';
-
 if(isset($_SESSION['is_logged'])){
     header("Location: " . BASE_URL);
 }
-
 $title = "Confirmation";
-
 ob_start(); ?>
 
 <main class="main-confirmation">

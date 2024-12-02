@@ -8,4 +8,3 @@ if(!empty($_SERVER['QUERY_STRING'] )){
 }else{
     $_SESSION['lastVisitedPage'] = BASE_URL . basename($_SERVER['PHP_SELF']);
 }
-
