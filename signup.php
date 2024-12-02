@@ -3,7 +3,7 @@
 session_start();
 
 require_once './controllers/signupValidation.php';
-require_once 'config/base_url.php';
+require_once './config/base_url.php';
 
 if(isset($_SESSION['is_logged'])){
     header("Location: " . BASE_URL);
@@ -15,7 +15,7 @@ ob_start(); ?>
 
 <main class="main-signup">
     <form action="" method="post" class="form" id="signUp">
-        <h2>Inscription</h2>
+        <h1>Inscription</h1>
         <div>
             <label for="username">Nom d'utilisateur</label>
             <input type="text" placeholder="JohnDoe025" name="username" class="username">

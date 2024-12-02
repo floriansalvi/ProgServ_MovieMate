@@ -3,7 +3,7 @@
 use ch\UserManager;
 
 require_once './config/autoload.php';
-require_once 'config/base_url.php';
+require_once './config/base_url.php';
 
 $usernameErr = $firstnameErr = $lastnameErr = $emailErr = $passwordErr = $passwordConfErr = "";
 $validationErr = false;
@@ -114,6 +114,7 @@ if(filter_has_var(INPUT_POST, 'signup')) {
             throw new Exception("L'inscription n'a pas pu être effectuée.");
         }else{
             header("Location: " . BASE_URL . "confirmation.php" . "?username=" . urlencode($username));
+            exit();
         }
     }
 }

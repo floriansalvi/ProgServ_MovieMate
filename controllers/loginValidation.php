@@ -3,7 +3,7 @@
 use ch\UserManager;
 
 require_once './config/autoload.php';
-require_once 'config/base_url.php';
+require_once './config/base_url.php';
 
 $db = new UserManager();
 
@@ -43,7 +43,9 @@ if(filter_has_var(INPUT_POST, 'login')) {
                     'cover' => $datas['cover'],
                     'role' => $datas['role']
                 ];
-                header("Location: " . BASE_URL);
+                $location = $_SESSION['lastVisitedPage'] ?? BASE_URL;
+                header("Location: " . $location);
+                exit();
             }else{
                 $errorMessage = '<div class="alert alert-danger">Votre compte n\'a pas été validé. Cherchez le mail de confirmation reçu lors de votre inscription.</div>';
             }

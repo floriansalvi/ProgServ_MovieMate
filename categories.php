@@ -7,8 +7,8 @@ $title ="Accueil";
 
 ob_start(); ?>
 
-<h1>Voici la page d'accueil</h1>
-<p>Découvrez le plus grand catalogue de film du monde</p>
+<h1>Voici la page catégories</h1>
+<p>Découvrez les films de cette catégorie</p>
 
 <?php echo $_SESSION['lastVisitedPage']?>
 

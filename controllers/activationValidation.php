@@ -3,7 +3,7 @@
 use ch\UserManager;
 
 require_once './config/autoload.php';
-require_once 'config/base_url.php';
+require_once './config/base_url.php';
 
 $db = new UserManager();
 
