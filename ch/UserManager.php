@@ -185,7 +185,7 @@ class UserManager extends DbManager implements I_User {
         }  
     }
 
-    private function updateField($userId, $field, $value):bool {
+    public function updateField($userId, $field, $value):bool {
         $datas = [
             'id' => $userId,
             $field => $value

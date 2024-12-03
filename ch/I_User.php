@@ -11,7 +11,7 @@ interface I_User {
     public function activateUser($token):bool;
     public function getAllUsers():array;
     public function getUserDatas($username, $password):array;
-    private function updateField($userId, $field, $value):bool;
+    public function updateField($userId, $field, $value):bool;
     public function updateUsername($userId, $newUsername):bool;
     public function updatePassword($userId, $newHashedPassword):bool;
     public function updateProfileCover($userId, $newCoverId):bool;

@@ -55,7 +55,7 @@ class DbManager {
                 release_date DATE NOT NULL,
                 duration INTEGER NOT NULL,
                 genre_id INTEGER REFERENCES genre(id),
-                cover_path VARCHAR(64) NOT NULL
+                cover_name VARCHAR(32) NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS rating (

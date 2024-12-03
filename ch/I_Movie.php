@@ -4,7 +4,7 @@ namespace ch;
 
 interface I_Movie {
     public function isTitleUsed($title):bool;
-    public function saveMovie($title, $description, $realisator, $releaseDate, $duration, $genreId, $movieCoverName):bool;
+    public function saveMovie($title, $description, $realisator, $releaseDate, $duration, $genreId, $coverName):bool;
     public function getAllMovies():array;
     public function getGenreMovies($genreId):array;
     public function getBestRatedMovies():array;
