@@ -2,6 +2,8 @@
 
 namespace ch;
 
+use \PDO;
+
 class DbManager {
     private $db;
 
@@ -54,6 +56,7 @@ class DbManager {
                 realisator VARCHAR(32) NOT NULL,
                 release_date DATE NOT NULL,
                 duration INTEGER NOT NULL,
+                add_date DATE NOT NULL,
                 genre_id INTEGER REFERENCES genre(id),
                 cover_name VARCHAR(32) NOT NULL
             );

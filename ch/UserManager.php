@@ -6,6 +6,7 @@ require_once 'lib/vendor/autoload.php';
 require_once 'config/base_url.php';
 
 use Exception;
+use \PDO;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
@@ -23,7 +24,7 @@ class UserManager extends DbManager implements I_User {
         try {
             $stmt->execute();
         } catch (PDOException $e) {
-            $e->getMessage();
+            error_log($e->getMessage());
         }
         return $stmt->fetchColumn() > 0;
     }
@@ -35,7 +36,7 @@ class UserManager extends DbManager implements I_User {
         try {
             $stmt->execute();
         } catch (PDOException $e) {
-            $e->getMessage();
+            error_log($e->getMessage());
         }  
         return $stmt->fetchColumn() > 0;        
     }
@@ -60,7 +61,7 @@ class UserManager extends DbManager implements I_User {
             try {
                 $stmt->execute($datas);
             } catch (PDOException $e) {
-                $e->getMessage();
+                error_log($e->getMessage());
             }
             $saved = true;
             $token = $this->createToken($email);
@@ -76,7 +77,7 @@ class UserManager extends DbManager implements I_User {
         try {
             $stmt->execute();
         } catch (PDOException $e) {
-            $e->getMessage();
+            error_log($e->getMessage());
         }  
         $id = $stmt->fetchColumn();
         if(!$id){
@@ -122,20 +123,57 @@ class UserManager extends DbManager implements I_User {
             return $stmtUpdate->rowCount() == 1;
         } catch (\PDOException $e) {
             $this->getDB()->rollBack();
-            $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }
-    public function getAllUsers():array {
-        $sql = "SELECT id, username, created_at, cover, role FROM user;";
-        $stmt = $this->getDB()->prepare($sql);
-        try {
-            $stmt->execute();
-        } catch (PDOException $e) {
-            $e->getMessage();
+
+    public function getUsers(?string $sortColumn, ?string $sortOrder, ?string $role, ?int $limit, ?int $offset):array {
+        
+        $datas = [];
+
+        $sql = "SELECT id, username, email, created_at, cover, role FROM user";
+
+        $validColumns = ['username', 'firstname', 'lastname', 'email', 'created_at'];
+        $validOrders = ['ASC', 'DESC'];
+        $sortColumn = in_array($sortColumn, $validColumns) ? $sortColumn : 'created_at';
+        $sortOrder = in_array($sortOrder, $validOrders) ? $sortOrder : 'DESC';
+
+        if(!is_null($role)){
+            $sql .= " WHERE role = :role";
+            $datas['role'] = $role;
         }
-        $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $datas;
+        
+        $sql .= " ORDER BY $sortColumn $sortOrder";
+
+        if(!is_null($limit)){
+            $sql .= " LIMIT :limit";
+            $datas['limit'] = $limit;
+        }
+
+        if(!is_null($offset)){
+            $sql .= " OFFSET :offset";
+            $datas['offset'] = $offset;
+        }
+        
+        $stmt = $this->getDB()->prepare($sql);
+
+        if (!is_null($limit)) {
+            $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
+        }
+
+        if (!is_null($offset)) {
+            $stmt->bindParam(':offset', $offset, \PDO::PARAM_INT);
+        }
+
+        try {
+            $stmt->execute($datas);
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return[];
+        }
+        return $users;
     }
 
     public function getUserDatas($username, $password): array {
@@ -145,7 +183,7 @@ class UserManager extends DbManager implements I_User {
         try {
             $stmt->execute();
         } catch (PDOException $e) {
-            $e->getMessage();
+            error_log($e->getMessage());
         }  
         $datas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         if(!$datas) {
@@ -165,57 +203,29 @@ class UserManager extends DbManager implements I_User {
         return $datas[0];
     }
 
-    public function updateUsername($userId, $newUsername):bool {
-        $datas = [
-            'id'=> $userId,
-            'username'=> $newUsername
-        ];
-        $sql = "UPDATE user SET username = :username WHERE id = :id;";
-        $stmt = $this->getDB()->prepare($sql);
-        try {
-            $stmt->execute($datas);
-            if($stmt->rowCount() > 0){
-                return true;
-            }else{
+    public function updateUserField($userId, $field, $value):bool {
+        $validFields = ['username', 'password', 'cover', 'role'];
+        if(in_array($field, $validFields)){
+            $datas = [
+                'id' => $userId,
+                $field => $value
+            ];
+            $sql = "UPDATE user SET $field = :$field WHERE id = :id;";
+            $stmt = $this->getDB()->prepare($sql);
+            try {
+                $stmt->execute($datas);
+                if($stmt->rowCount()>0){
+                    return true;
+                }else{
+                    return false;
+                }
+            } catch (\PDOException $e){
+                error_log($e->getMessage());
                 return false;
             }
-        } catch (PDOException $e) {
-            $e->getMessage();
+        }else{
             return false;
-        }  
-    }
-
-    public function updateField($userId, $field, $value):bool {
-        $datas = [
-            'id' => $userId,
-            $field => $value
-        ];
-        $sql = "UPDATE user SET $field = :$field WHERE id = :id;";
-        $stmt = $this->getDB()->prepare($sql);
-        try {
-            $stmt->execute($datas);
-            if($stmt->rowCount()>0){
-                return true;
-            }else{
-                return false;
-            }
-        } catch (\PDOException $e){
-            $e->getMessage();
-            return false;
-        }
-    }
-
-    public function updatePassword($userId, $newHashedPassword): bool {
-        return $this->updateField($userId, 'password', $newHashedPassword);     
-    }
-
-    public function updateProfileCover($userId, $newCoverId):bool {
-        return $this->updateField($userId, 'cover', $newCoverId);     
-      
-    }
-
-    public function updateRole($userId, $role): bool {
-        return $this->updateField($userId, 'role', $role);     
+        } 
     }
 
     public function deleteUser($id):bool {
@@ -224,10 +234,10 @@ class UserManager extends DbManager implements I_User {
         $stmt->bindParam('id', $id, \PDO::PARAM_INT);
         try {
             $stmt->execute();
+            return true;
         } catch (PDOException $e) {
-            $e->getMessage();
+            error_log($e->getMessage());
             return false;
-        }
-        return true;  
+        }  
     }
 }

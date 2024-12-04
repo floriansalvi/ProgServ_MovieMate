@@ -9,12 +9,8 @@ interface I_User {
     public function createToken($email):string;
     public function sendVerificationMail($email, $token):bool;
     public function activateUser($token):bool;
-    public function getAllUsers():array;
+    public function getUsers(?string $sortColumn, ?string $sortOrder, ?string $role, ?int $limit, ?int $offset):array;
     public function getUserDatas($username, $password):array;
-    public function updateField($userId, $field, $value):bool;
-    public function updateUsername($userId, $newUsername):bool;
-    public function updatePassword($userId, $newHashedPassword):bool;
-    public function updateProfileCover($userId, $newCoverId):bool;
-    public function updateRole($userId, $role):bool;
+    public function updateUserField($userId, $field, $value):bool;
     public function deleteUser($id):bool;
 }
