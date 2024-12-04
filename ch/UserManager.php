@@ -23,10 +23,11 @@ class UserManager extends DbManager implements I_User {
         $stmt->bindParam('email', $email, \PDO::PARAM_STR);
         try {
             $stmt->execute();
+            return $stmt->fetchColumn() > 0;
         } catch (PDOException $e) {
             error_log($e->getMessage());
+            return false;
         }
-        return $stmt->fetchColumn() > 0;
     }
 
     public function isUserNameUsed($username):bool {
@@ -35,10 +36,11 @@ class UserManager extends DbManager implements I_User {
         $stmt->bindParam('username', $username, \PDO::PARAM_STR);
         try {
             $stmt->execute();
+            return $stmt->fetchColumn() > 0;
         } catch (PDOException $e) {
             error_log($e->getMessage());
-        }  
-        return $stmt->fetchColumn() > 0;        
+            return false;
+        }          
     }
 
     public function saveUser($username, $firstname, $lastname, $email, $password):bool {

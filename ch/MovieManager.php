@@ -17,10 +17,11 @@ class MovieManager extends DbManager implements I_Movie {
         $stmt->bindParam('title', $title, \PDO::PARAM_STR);
         try {
             $stmt->execute();
+            return $stmt->fetchColumn() > 0;
         } catch (PDOException $e) {
             error_log($e->getMessage());
+            return false;
         }
-        return $stmt->fetchColumn() > 0;
     }
 
     public function saveMovie($title, $description, $realisator, $releaseDate, $duration, $genreId, $coverName):bool {
