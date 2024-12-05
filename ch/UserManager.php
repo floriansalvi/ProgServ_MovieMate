@@ -160,14 +160,6 @@ class UserManager extends DbManager implements I_User {
         
         $stmt = $this->getDB()->prepare($sql);
 
-        if (!is_null($limit)) {
-            $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
-        }
-
-        if (!is_null($offset)) {
-            $stmt->bindParam(':offset', $offset, \PDO::PARAM_INT);
-        }
-
         try {
             $stmt->execute($datas);
             $users = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -79,14 +79,6 @@ class MovieManager extends DbManager implements I_Movie {
         
         $stmt = $this->getDB()->prepare($sql);
 
-        if (!is_null($limit)) {
-            $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
-        }
-
-        if (!is_null($offset)) {
-            $stmt->bindParam(':offset', $offset, \PDO::PARAM_INT);
-        }
-
         try {
             $stmt->execute($datas);
             $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
