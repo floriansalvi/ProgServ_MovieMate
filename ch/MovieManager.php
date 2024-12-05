@@ -89,6 +89,29 @@ class MovieManager extends DbManager implements I_Movie {
         return $movies;
     }
 
+    public function getMoviesCount(?int $genreId):int {
+        
+        $datas = [];
+
+        $sql = "SELECT COUNT(*) as total FROM movie";
+
+        if(!is_null($genreId)){
+            $sql .= " WHERE genre_id = :genre_id;";
+            $datas['genre_id'] = $genreId;
+        }
+        
+        $stmt = $this->getDB()->prepare($sql);
+
+        try {
+            $stmt->execute($datas);
+            $moviesAmount = (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return 0;
+        }
+        return $moviesAmount;
+    }
+
     public function getMovieDatas($movieId):array {
         $sql = "SELECT * FROM movie WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
