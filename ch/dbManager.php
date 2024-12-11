@@ -65,7 +65,7 @@ class DbManager {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER REFERENCES user(id),
                 movie_id INTEGER REFERENCES movie(id),
-                rate INTEGER NOT NULL,
+                rate INTEGER NOT NULL CHECK (rate IN (1 ,2, 3, 4, 5)),
                 comment TEXT,
                 created_at DATETIME NOT NULL
             )
