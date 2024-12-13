@@ -21,7 +21,7 @@ ob_start(); ?>
             foreach($movies as $movie): ?>
                 <section class="movie" onclick="window.location='<?= BASE_URL . 'movie?id=' . $movie['id'] ?>'">
                     <div class="img-container">
-                        <img src="assets/img/movie_cover/<?= $movie['cover_name']?>" alt="<?= $movie['title'] ?>">
+                        <img src="assets/img/movie_cover/<?= $movie['cover_name']?>" alt="<?= $movie['title'] ?>" loading="lazy">
                     </div>
                     <div class="txt-container">
                         <h2><?= htmlspecialchars($movie['title'])?></h2>
@@ -29,11 +29,16 @@ ob_start(); ?>
                         <p class="duration">Durée : <?= htmlspecialchars($movie['duration']) . " min"?></p>
                     <?php 
                         if($movie['rating_avg'] !== null){
+                            echo "<div class='movie-rating'><div class='movie-stars'>";
                             $movieRating = $movie['rating_avg'];
                             $fullStar = floor($movieRating);
-                            $decimalStar = ($movieRating - $fullStar) > 0 ? 1 : 0;
-                            $emptyStar = 5 - $decimalStar - $fullStar;
-                            echo "<div class=movie-rating'>";
+                            $decimalStar = 0;
+                            if(($movieRating - $fullStar) >= 0.25 && ($movieRating - $fullStar) <= 0.75){
+                                $decimalStar = 1;
+                            }
+                            if(($movieRating - $fullStar) > 0.75){
+                                $fullStar++;
+                            }
                             for($i = 0; $i < $fullStar; $i++){
                                 echo "<i class='fa-solid fa-star' id='star-full'></i>";
                             }
@@ -41,11 +46,9 @@ ob_start(); ?>
                             if($decimalStar > 0){
                                 echo "<i class='fa-solid fa-star-half' id='star-decimal'></i>";
                             }
-
-                            for($i = 0; $i < $emptyStar; $i++){
-                                echo "<i class='fa-solid fa-star' id='star-empty'></i>";
-                            }
-                            echo "</div>";  
+                        
+                            echo "</div><p>" . $movie['rating_avg'] . "</p></div>";
+                             
                         }?>
                     </div>
                 </section>
@@ -57,7 +60,7 @@ ob_start(); ?>
         $link = BASE_URL . "movies.php";
         $page > 2 ? $link .= "?page=" . ($page -1) . "&" : "";
         echo $page > 1 ? "<a href='" . $link . "?sort=" . $sort . "'><i class='fa-solid fa-chevron-left'></i></a>" : "";
-        echo $pagesAmount > 1 ? "<p>" . $page . " sur " . $pagesAmount ."</p>" : "";
+        echo $pagesAmount > 1 ? "<p>" . $page . "</p>" : "";
         echo $page < $pagesAmount ? "<a href='" . BASE_URL . "movies.php?page=" . $page+1 . "&sort=" . $sort . "'><i class='fa-solid fa-chevron-right'></i></a>" : ""; ?>
     </div>
 

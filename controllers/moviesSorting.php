@@ -95,8 +95,8 @@ $sortOrder = $validSortingEl[$sort]['order'] ?? "DESC";
 $movies = $db->getMovies($sortColumn, $sortOrder, null, $moviesPerPage, $offset);
 
 $form = 
-'<form method="get">
-<select name="sort" id="sort" onchange="this.form.submit()">
+'<form method="get" class="form-sort">
+<select name="sort" class="form-sort-select" onchange="this.form.submit()">
 <option value=""' . ($sort === "add" ? ' selected="selected"' : '') . '>Trier les films</option>';
 
 foreach($validSortingEl as $key => $sortingEl){
@@ -105,6 +105,4 @@ foreach($validSortingEl as $key => $sortingEl){
     }
 }
 
-$form .=
-'</select>
-</form>';
+$form .= '</select> </form>';
