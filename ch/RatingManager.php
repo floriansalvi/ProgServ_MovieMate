@@ -30,7 +30,7 @@ class RatingManager extends DbManager implements I_Rating {
     public function saveRating($movieId, $userId, $rate, $comment):bool {
         $saved = false;
         $creationTime = date("Y-m-d H:i:s");
-        if(!empty($username) && !empty($firstname) && !empty($lastname) && !empty($email) && !empty($password)){
+        if(!empty($movieId) && !empty($userId) && !empty($rate)){
             $datas = [
                 'user_id' => $userId,
                 'movie_id' => $movieId,
@@ -42,13 +42,27 @@ class RatingManager extends DbManager implements I_Rating {
             $stmt = $this->getDB()->prepare($sql);
             try {
                 $stmt->execute($datas);
-                $saved = true;
+                $saved = $this->updateRatingAvg($movieId);
             } catch (PDOException $e) {
                 error_log($e->getMessage());
             }
             $saved = true;
         }
         return $saved;
+    }
+
+    public function updateRatingAvg($movieId):bool {
+        $sql = "UPDATE movie SET rating_avg = (SELECT AVG(rate) FROM rating WHERE movie_id = movie.id) WHERE id = :id;";
+        
+        $stmt = $this->getDB()->prepare($sql);
+        $stmt->bindParam('id', $movieId, PDO::PARAM_INT);
+        try {
+            $stmt->execute();
+            return true; 
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return false;
+        }
     }
 
     public function getRatings(?string $idType, ?int $id, ?int $limit):array {
@@ -64,7 +78,7 @@ class RatingManager extends DbManager implements I_Rating {
         $sql = "SELECT * FROM rating";
 
         if($columnName !== null && $id !== null){
-            $sql .= " WHERE " . $columnName . " = :id";
+            $sql .= " WHERE " . $columnName . " = :id ORDER BY created_at DESC";
             $datas['id'] = $id;
         }
 
@@ -81,6 +95,34 @@ class RatingManager extends DbManager implements I_Rating {
         } catch (PDOException $e) {
             error_log($e->getMessage());
             return[];
+        }
+    }
+
+    public function getRatingsCount(?string $idType, ?int $id):int {
+        $datas = [];
+        $validIdTypes = ['user', 'movie'];
+
+        $columnName = null;
+
+        if($idType !== null && in_array($idType, $validIdTypes)){
+            $columnName = $idType . "_id";
+        }
+
+        $sql = "SELECT COUNT(*) as total FROM rating";
+
+        if($columnName !== null && $id !== null){
+            $sql .= " WHERE " . $columnName . " = :id";
+            $datas['id'] = $id;
+        }
+
+        $stmt = $this->getDB()->prepare($sql);
+        
+        try {
+            $stmt->execute($datas);
+            return (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return 0;
         }
     }
 

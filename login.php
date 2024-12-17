@@ -24,8 +24,8 @@ ob_start(); ?>
             <button type="submit" name="login" class="button">Se connecter</button>
             <?php echo $errorMessage; ?>
             <p class="message">Pas encore de compte? <a href="<?php echo BASE_URL . 'signup.php'?>" class="button">S'inscrire</a></p>
-        </form>
-    </main>
+    </form>
+</main>
 
 <?php $content = ob_get_clean(); ?>
 

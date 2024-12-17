@@ -3,10 +3,9 @@ require_once './config/base_url.php';
 ?>
 
 <header>
-    <div id="logo">
-    </div>
-    <nav>
-        <ul>
+    <img src="<?= BASE_URL . "/assets/img/movieMate_logo.png" ?>" alt="website logo" id="logo" onclick="window.location='<?= BASE_URL ?>'">
+    <nav class="nav-bar">
+        <ul class="nav-menu">
             <?php
                 echo "
                     <li><a href='" . BASE_URL . "'>Accueil</a></li>
@@ -15,9 +14,7 @@ require_once './config/base_url.php';
                 ";
             ?>
         </ul>
-    </nav>
-    <div id="log_section">
-        <ul>
+        <ul class="nav-log">
             <?php
                 if(!isset($_SESSION['is_logged'])){
                     echo "
@@ -33,5 +30,5 @@ require_once './config/base_url.php';
                 }
             ?>
         </ul>
-    </div>
+    </nav>
 </header>

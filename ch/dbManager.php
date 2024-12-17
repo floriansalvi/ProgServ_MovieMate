@@ -58,7 +58,8 @@ class DbManager {
                 duration INTEGER NOT NULL,
                 add_date DATE NOT NULL,
                 genre_id INTEGER REFERENCES genre(id),
-                cover_name VARCHAR(32) NOT NULL
+                cover_name VARCHAR(32) NOT NULL,
+                rrating_avg FLOAT 
             );
 
             CREATE TABLE IF NOT EXISTS rating (

@@ -1,8 +1,10 @@
 <?php
 
+use ch\GenreManager;
 use ch\MovieManager;
 
 require_once 'ch/MovieManager.php';
+require_once 'ch/GenreManager.php';
 require_once './config/base_url.php';
 
 $validSortingEl = [
@@ -64,6 +66,30 @@ if(!array_key_exists($sort, $validSortingEl)){
     throw new Exception('Cette page n\'existe pas.');
 }
 
+//
+
+$genre = $_GET['genre'] ?? null;
+
+// $dbGenre = new GenreManager();
+// $genresList = $dbGenre->getAllGenres();
+
+// if(isset($_GET['genre'])){
+//     if(empty($$_GET['genre'])){
+//         header("Location: " . BASE_URL . "movies.php");
+//         exit();
+//     }
+
+//     if(!filter_var($genre, FILTER_VALIDATE_INT)){
+//         throw new Exception('Cette page n\'existe pas.');
+//     }
+
+//     if(!array_key_exists($genre, $genresList)){
+//         throw new Exception('Cette page n\'existe pas.');
+//     }
+// }
+
+//
+
 $page = $_GET['page'] ?? 1;
 
 if(!filter_var($page, FILTER_VALIDATE_INT)){
@@ -80,9 +106,9 @@ if($page <= 0){
     throw new Exception('Cette page n\'existe pas.');
 }
 
-$db = new MovieManager();
-$moviesPerPage = 12;
-$moviesAmount = $db->getMoviesCount(null);
+$dbMovie = new MovieManager();
+$moviesPerPage = 15;
+$moviesAmount = $dbMovie->getMoviesCount($genre);
 $pagesAmount = ceil($moviesAmount / $moviesPerPage);
 
 if($page > $pagesAmount){
@@ -92,7 +118,7 @@ if($page > $pagesAmount){
 $offset = ($page-1) * $moviesPerPage;
 $sortColumn = $validSortingEl[$sort]['column'] ?? "add_date";
 $sortOrder = $validSortingEl[$sort]['order'] ?? "DESC";
-$movies = $db->getMovies($sortColumn, $sortOrder, null, $moviesPerPage, $offset);
+$movies = $dbMovie->getMovies($sortColumn, $sortOrder, $genre, $moviesPerPage, $offset);
 
 $form = 
 '<form method="get" class="form-sort">

@@ -130,6 +130,21 @@ class UserManager extends DbManager implements I_User {
         }
     }
 
+    public function getUserById($id):array {
+        $sql = "SELECT id, username, cover FROM user WHERE id = :id;";
+        $stmt = $this->getDB()->prepare($sql);
+        $stmt->bindParam('id', $id, \PDO::PARAM_STR);
+        try{
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $user;
+        } catch (\PDOException $e) {
+            $this->getDB()->rollBack();
+            error_log($e->getMessage());
+            return [];
+        }
+    }
+
     public function getUsers(?string $sortColumn, ?string $sortOrder, ?string $role, ?int $limit, ?int $offset):array {
         
         $datas = [];
