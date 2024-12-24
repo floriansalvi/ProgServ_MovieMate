@@ -46,7 +46,6 @@ class RatingManager extends DbManager implements I_Rating {
             } catch (PDOException $e) {
                 error_log($e->getMessage());
             }
-            $saved = true;
         }
         return $saved;
     }
@@ -72,7 +71,7 @@ class RatingManager extends DbManager implements I_Rating {
         $columnName = null;
 
         if($idType !== null && in_array($idType, $validIdTypes)){
-            $columnName = $idType . "_id";
+                $columnName = $idType . "_id";
         }
 
         $sql = "SELECT * FROM rating";
@@ -96,6 +95,20 @@ class RatingManager extends DbManager implements I_Rating {
             error_log($e->getMessage());
             return[];
         }
+    }
+
+    public function getRatingDatasById($ratingId):array {
+        $sql = "SELECT * FROM rating WHERE id = :id;";
+        $stmt = $this->getDB()->prepare($sql);
+        $stmt->bindParam('id', $ratingId, PDO::PARAM_INT);
+        try {
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC)?: []; 
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            $result = [];
+        } 
+        return $result;
     }
 
     public function getRatingsCount(?string $idType, ?int $id):int {
@@ -127,11 +140,13 @@ class RatingManager extends DbManager implements I_Rating {
     }
 
     public function deleteRating($ratingId):bool {
+        $rating = $this->getRatingDatasById($ratingId);
         $sql = "DELETE FROM rating WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
         $stmt->bindParam('id', $ratingId, \PDO::PARAM_INT);
         try {
             $stmt->execute();
+            $this->updateRatingAvg($rating['movie_id']);
             return true; 
         } catch (PDOException $e) {
             error_log($e->getMessage());

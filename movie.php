@@ -100,7 +100,7 @@ ob_start(); ?>
                     
                     if($dbRating->isMovieRatedByUser($movie['id'], $_SESSION['user']['id']) === false): ?>
                         <form action="" method="post" class="form" id="rate">
-                            <h3>Add a rating</h3>
+                            <h3>Ajouter un avis</h3>
                             <div class="new-rating-rate">
                                 <input type="radio" name="stars" value="5" id="id-5">
                                 <label for="id-5"></label>
@@ -115,11 +115,10 @@ ob_start(); ?>
                                 <?php echo $rateErr; ?>
                             </div>
                             <div class="new-rating-comment">
-                                <label for="comment">Comment</label>
-                                <textarea placeholder="The movie was…" maxlength="500" name="comment" class="comment"></textarea>
+                                <textarea placeholder="J'ai trouvé ce film…" maxlength="500" rows="3" name="comment" class="comment"></textarea>
                                 <?php echo $commentErr;?>
                             </div>
-                            <button type="submit" name="rate" class="button">Send</button>
+                            <button type="submit" name="rate" class="button"><i class="fa-solid fa-arrow-right"></i></button>
                             <?php echo $errorMessage; ?>
                         </form>
                     <?php endif;
@@ -128,28 +127,36 @@ ob_start(); ?>
                         foreach($ratings as $rating):
                             $user = $dbUser->getUserById($rating['user_id']);
                             ?>
-                            <article class="rating">
-                                <div class="user-info">
-                                    <div  class="user-cover-container">
-                                        <img src="<?= BASE_URL . "assets/img/user_cover/user_cover_" . $user['cover'] . ".jpg"?>" alt="user cover">
+                            <article class="rating-container">
+                                <div class="rating">
+                                    <div class="user-info">
+                                        <div  class="user-cover-container">
+                                            <img src="<?= BASE_URL . "assets/img/user_cover/user_cover_" . $user['cover'] . ".jpg"?>" alt="user cover">
+                                        </div>
+                                        <h4><?= htmlspecialchars($user['username'])?></h4>
                                     </div>
-                                    <h4><?= htmlspecialchars($user['username'])?></h4>
-                                </div>
-                                <div class="rating-info">
-                                    <p class="rating-stars">
+                                    <div class="rating-info">
+                                        <p class="rating-stars">
                                         <?php
                                             for($i = 0; $i < $rating['rate']; $i++):?>
                                                 <i class='fa-solid fa-star' id='star-full'></i>
                                             <?php endfor; ?>
-                                    </p>
-                                    <?php
-                                        if(!empty($rating['comment'])){
-                                            echo "<p class='rating-comment'>" . $rating['comment'] . "</p>";
-                                        }
-                                        ?>
-                                    <?php $dateObj = DateTime::createFromFormat('Y-m-d H:i:s', $rating['created_at']); ?>
-                                    <p class="rating-date"><?= $dateObj->format('j F Y') ?></p>
+                                        </p>
+                                        <?php
+                                            if(!empty($rating['comment'])){
+                                                echo "<p class='rating-comment'>" . $rating['comment'] . "</p>";
+                                            }
+                                            ?>
+                                        <?php $dateObj = DateTime::createFromFormat('Y-m-d H:i:s', $rating['created_at']); ?>
+                                        <p class="rating-date"><?= $dateObj->format('j F Y') ?></p>
+                                    </div>
                                 </div>
+                                <?php if($rating['user_id'] === $_SESSION['user']['id']) : ?>
+                                        <form action="" method="post" class="form" id="rating-delete">
+                                            <input type="hidden" name="rating_id" value="' . $rating['id'] . '">
+                                            <button type="submit" name="delete-rating"><i class="fa-solid fa-xmark"></i></button>
+                                        </form>
+                               <?php endif; ?> 
                             </article>
                         <?php endforeach;
                     }

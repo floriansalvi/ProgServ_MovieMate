@@ -1,6 +1,5 @@
 <?php
 session_start();
-use ch\MovieManager;
 require_once 'config/autoload.php';
 require_once 'controllers/moviesSorting.php';
 include './controllers/lastVisitedPage.php';
@@ -9,8 +8,10 @@ $title = "Films";
 ob_start(); ?>
 
 <main class="main-movies">
-    <h1>Tous les films</h1>
-    <?php echo $form ?>
+    <?php 
+    echo $subHeader;
+    echo $form;
+    ?>
     <div class="movies">
         <?php 
         if(empty($movies)){
@@ -59,11 +60,30 @@ ob_start(); ?>
     </div>
     <div class="pagination">
         <?php
-        $link = BASE_URL . "movies.php";
-        $page > 2 ? $link .= "?page=" . ($page -1) . "&" : "";
-        echo $page > 1 ? "<a href='" . $link . "?sort=" . $sort . "?genre=" . $genre . "'><i class='fa-solid fa-chevron-left'></i></a>" : "";
-        echo $pagesAmount > 1 ? "<p>" . $page . "</p>" : "";
-        echo $page < $pagesAmount ? "<a href='" . BASE_URL . "movies.php?page=" . $page+1 . "&sort=" . $sort . "'><i class='fa-solid fa-chevron-right'></i></a>" : ""; ?>
+            $linkBackwardParam = [
+                'page' => $page > 2 ? $page - 1 : null,
+                'sort' => $sort ?? null,
+                'genre' => $genre ?? null
+            ];
+            $linkBackwardParam = array_filter($linkBackwardParam, fn($values) => $values !== null);
+            $linkBackwardParam = array_filter($linkBackwardParam, fn($values) => $values !== "add");
+            $linkBackwardParamString = http_build_query($linkBackwardParam);
+            $linkBackward = BASE_URL . "movies.php" . ($linkBackwardParamString ? "?" . $linkBackwardParamString : "");
+
+            $linkForwardParam = [
+                'page' => $page < $pagesAmount ? $page + 1 : null,
+                'sort' => $sort ?? null,
+                'genre' => $genre ?? null
+            ];
+            $linkForwardParam = array_filter($linkForwardParam, fn($values) => $values !== null);
+            $linkForwardParam = array_filter($linkForwardParam, fn($values) => $values !== "add");
+            $linkForwardParamString = http_build_query($linkForwardParam);
+            $linkForward = BASE_URL . "movies.php" . ($linkForwardParamString ? "?" . $linkForwardParamString : "");
+
+            echo $page > 1 ? "<a href='" . $linkBackward . "'><i class='fa-solid fa-chevron-left'></i></a>" : "";
+            echo $pagesAmount > 1 ? "<p>" . $page . "</p>" : "";
+            echo $page < $pagesAmount ? "<a href='" . $linkForward . "'><i class='fa-solid fa-chevron-right'></i></a>" : "";
+        ?>
     </div>
 
 </main>

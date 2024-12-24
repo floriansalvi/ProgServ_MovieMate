@@ -30,6 +30,27 @@ if(filter_has_var(INPUT_POST, 'rate')) {
 
     if($validationErr === false){
         $db->saveRating($_GET['id'], $_SESSION['user']['id'], $movieRate, $movieComment);
+        header("Location: " . BASE_URL . "movie.php?id=" . $_GET['id']);
+        exit();
     }
 
+}
+
+if(filter_has_var(INPUT_POST, 'delete-rating')) {
+    $ratingId = (int)filter_input(INPUT_POST, 'rating_id', FILTER_VALIDATE_INT);
+    
+    $rating = $db->getRatingDatasById($ratingId);
+    
+    $movieId = $_GET['id'];
+    $userId = $_SESSION['user']['id'];
+
+    if(empty($rating)){
+        throw new Exception("No corresponding rating could be found.");
+    }else if($rating['movie_id'] == $movieId && $rating['user_id'] == $userId){
+        $db->deleteRating($ratingId);
+        header("Location: " . BASE_URL . "movie.php?id=" . $movieId);
+        exit();
+    }else{
+        throw new Exception("No corresponding rating could be found.");
+    }
 }

@@ -23,4 +23,18 @@ class GenreManager extends DbManager {
             return [];
         }
     }
+
+    public function getGenreDatas($id):array {
+        $sql = "SELECT id, title, description FROM genre WHERE id = :id;";
+        $stmt = $this->getDB()->prepare($sql);
+        $stmt->bindParam('id', $id, PDO::PARAM_INT);
+        try {
+            $stmt->execute();
+            $genres = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $genres;
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return [];
+        }
+    }
 }

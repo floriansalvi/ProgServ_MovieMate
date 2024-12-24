@@ -55,56 +55,44 @@ $validSortingEl = [
     ]
 ];
 
+$sort = $_GET['sort'] ?? "add";
 if(isset($_GET['sort']) && empty($_GET['sort'])){
     header("Location: " . BASE_URL . "movies.php");
     exit();
-}
-
-$sort = $_GET['sort'] ?? 'add';
-
-if(!array_key_exists($sort, $validSortingEl)){
+} else if(isset($_GET['sort']) && $sort === "add"){
+    header("Location: " . BASE_URL . "movies.php");
+    exit();
+} else if(!array_key_exists($sort, $validSortingEl)){
     throw new Exception('Cette page n\'existe pas.');
-}
+};
 
 //
 
 $genre = $_GET['genre'] ?? null;
 
-// $dbGenre = new GenreManager();
-// $genresList = $dbGenre->getAllGenres();
+$dbGenre = new GenreManager();
+$allGenres = $dbGenre->getAllGenres();
+$allGenreIds = array_column($allGenres, 'id');
 
-// if(isset($_GET['genre'])){
-//     if(empty($$_GET['genre'])){
-//         header("Location: " . BASE_URL . "movies.php");
-//         exit();
-//     }
-
-//     if(!filter_var($genre, FILTER_VALIDATE_INT)){
-//         throw new Exception('Cette page n\'existe pas.');
-//     }
-
-//     if(!array_key_exists($genre, $genresList)){
-//         throw new Exception('Cette page n\'existe pas.');
-//     }
-// }
+if($genre !== null){
+    if(!filter_var($genre, FILTER_VALIDATE_INT) || !in_array((int)$genre, $allGenreIds)){
+        throw new Exception('Cette page n\'existe pas.');
+    }else{
+        $genre = (int)$genre;
+    }
+}
 
 //
 
 $page = $_GET['page'] ?? 1;
-
 if(!filter_var($page, FILTER_VALIDATE_INT)){
     throw new Exception('Cette page n\'existe pas.');
-};
-
-if($page === '1'){
+} else if($page === '1'){
     header("Location: " . BASE_URL . "movies.php" . "?sort=" . $sort);
     exit();
-}
-
-$page = (int)$page;
-if($page <= 0){
+} else if((int)$page <= 0){
     throw new Exception('Cette page n\'existe pas.');
-}
+};
 
 $dbMovie = new MovieManager();
 $moviesPerPage = 15;
@@ -120,9 +108,9 @@ $sortColumn = $validSortingEl[$sort]['column'] ?? "add_date";
 $sortOrder = $validSortingEl[$sort]['order'] ?? "DESC";
 $movies = $dbMovie->getMovies($sortColumn, $sortOrder, $genre, $moviesPerPage, $offset);
 
-$form = 
-'<form method="get" class="form-sort">
-<select name="sort" class="form-sort-select" onchange="this.form.submit()">
+$form = '<form method="get" class="form-sort">';
+$form .= $genre !== null ? '<input type="hidden" name="genre" value="' . htmlspecialchars($genre) . '">' : '';
+$form .= '<select name="sort" class="form-sort-select" onchange="this.form.submit()">
 <option value=""' . ($sort === "add" ? ' selected="selected"' : '') . '>Trier les films</option>';
 
 foreach($validSortingEl as $key => $sortingEl){
@@ -132,3 +120,22 @@ foreach($validSortingEl as $key => $sortingEl){
 }
 
 $form .= '</select> </form>';
+
+
+$pageTitle = $pageDescription = "";
+
+if($genre !== null){
+    $genreDatas = $dbGenre->getGenreDatas($genre);
+    $pageTitle = $genreDatas['title'];
+    $pageDescription = $genreDatas['description'];
+}else{
+    $pageTitle = "Les films de MovieMate";
+    $pageDescription = "Parcourez le catalogue de films proposés par MovieMate !";
+}
+
+$subHeader = '
+<div class="movies-subheader">
+    <h1>' . $pageTitle . '</h1>
+    <p>' . $pageDescription . '</p>
+</div>
+';
