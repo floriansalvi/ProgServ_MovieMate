@@ -36,7 +36,6 @@ if($ratingsAmount > 0){
     $maxLoads = 1;
 }
 
-
 $ratingsLoad = $_GET['ra'] ?? 1;
 
 if(!filter_var($ratingsLoad, FILTER_VALIDATE_INT)){
@@ -59,7 +58,7 @@ $title = $movie['title'];
 ob_start(); ?>
 
 <main class="main-movie">
-        <a href='<?= $_SESSION['lastVisitedPage'] ?>' class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <a href='<?= $_SESSION['lastVisitedPage'] ?>' class="back-btn"><i class="fa-solid fa-arrow-left">Retour</i></a>
         <div>
             <section class="movie-card">
                 <div class="movie-cover-container">
@@ -67,7 +66,7 @@ ob_start(); ?>
                 </div>
                 <div class="movie-info">
                     <h1> <?= $movie['title'] ?></h1>
-                    <p class="realisator"><?= $movie['realisator'] ?></p>
+                    <p class="realisator"><?= $movie['realisator']?></p>
                     <?php if(!empty($movie['rating_avg'])): ?>
                         <p class="rate"><?= htmlspecialchars(round($movie['rating_avg'], 1))?>
                         <span><?php
@@ -81,11 +80,11 @@ ob_start(); ?>
                                     $fullStar++;
                                 }
                                 for($i = 0; $i < $fullStar; $i++){
-                                    echo "<i class='fa-solid fa-star' id='star-full'></i>";
+                                    echo "<i class='fa-solid fa-star' id='star-full'>*</i>";
                                 }
 
                                 if($decimalStar > 0){
-                                    echo "<i class='fa-solid fa-star-half' id='star-decimal'></i>";
+                                    echo "<i class='fa-solid fa-star-half' id='star-decimal'>*</i>";
                                 }
                         ?></span>
                     </p>
@@ -118,7 +117,7 @@ ob_start(); ?>
                                 <textarea placeholder="J'ai trouvé ce film…" maxlength="500" rows="3" name="comment" class="comment"></textarea>
                                 <?php echo $commentErr;?>
                             </div>
-                            <button type="submit" name="rate" class="button"><i class="fa-solid fa-arrow-right"></i></button>
+                            <button type="submit" name="rate" class="button"><i class="fa-solid fa-arrow-right">Publier</i></button>
                             <?php echo $errorMessage; ?>
                         </form>
                     <?php endif;
@@ -139,7 +138,7 @@ ob_start(); ?>
                                         <p class="rating-stars">
                                         <?php
                                             for($i = 0; $i < $rating['rate']; $i++):?>
-                                                <i class='fa-solid fa-star' id='star-full'></i>
+                                                <i class='fa-solid fa-star' id='star-full'>*</i>
                                             <?php endfor; ?>
                                         </p>
                                         <?php
@@ -147,15 +146,39 @@ ob_start(); ?>
                                                 echo "<p class='rating-comment'>" . $rating['comment'] . "</p>";
                                             }
                                             ?>
-                                        <?php $dateObj = DateTime::createFromFormat('Y-m-d H:i:s', $rating['created_at']); ?>
-                                        <p class="rating-date"><?= $dateObj->format('j F Y') ?></p>
+                                        <?php 
+                                            $dateRating = DateTime::createFromFormat('Y-m-d H:i:s', $rating['created_at']);
+                                            $format = new IntlDateFormatter(
+                                                'fr_FR', 
+                                                IntlDateFormatter::LONG, 
+                                                IntlDateFormatter::NONE
+                                            );
+                                            $format->setPattern('d MMMM yyyy');
+                                        ?>
+                                        <p class="rating-date"><?= $format->format($dateRating) ?></p>
                                     </div>
                                 </div>
-                                <?php if($rating['user_id'] === $_SESSION['user']['id']) : ?>
-                                        <form action="" method="post" class="form" id="rating-delete">
-                                            <input type="hidden" name="rating_id" value="' . $rating['id'] . '">
-                                            <button type="submit" name="delete-rating"><i class="fa-solid fa-xmark"></i></button>
+                                <?php if($rating['user_id'] === $_SESSION['user']['id'] || $_SESSION['user']['role'] === 'admin') : ?>
+                                    <?php if(isset($_SESSION['movie_to_delete']) && $rating['movie_id'] == $_SESSION['movie_to_delete']) : ?>
+                                        <form action="" method="post" class="form" id="delete-rating-confirmation">
+                                            <input type="hidden" name="rating_id" value="<?= $rating['id'] ?>">
+                                            <input type="hidden" name="movie_id" value="<?= $_GET['id'] ?>">
+                                            <label id="delete-rating-confirmation-yes">
+                                                <input type="radio" name="confirmation" value="0" onchange="this.form.submit()">
+                                                <i class="fa-solid fa-xmark">X</i>
+                                            </label>
+                                            <label id="delete-rating-confirmation-no">
+                                                <input type="radio" name="confirmation" value="1" onchange="this.form.submit()">
+                                                <i class="fa-solid fa-check">✓</i>
+                                            </label>
                                         </form>
+                                    <?php else : ?>
+                                        <form action="" method="post" class="form" id="delete-rating">
+                                            <input type="hidden" name="rating_id" value="<?= $rating['id'] ?>">
+                                            <input type="hidden" name="movie_id" value="<?= $_GET['id'] ?>">
+                                            <button type="submit" name="delete-rating"><i class="fa-solid fa-xmark">X</i></button>
+                                        </form>
+                                    <?php endif; ?>
                                <?php endif; ?> 
                             </article>
                         <?php endforeach;

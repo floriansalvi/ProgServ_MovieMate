@@ -13,5 +13,6 @@ interface I_User {
     public function getUsers(?string $sortColumn, ?string $sortOrder, ?string $role, ?int $limit, ?int $offset):array;
     public function getUserDatas($username, $password):array;
     public function updateUserField($userId, $field, $value):bool;
+    public function getUsersCount():int;
     public function deleteUser($id):bool;
 }

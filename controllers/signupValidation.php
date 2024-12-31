@@ -35,10 +35,10 @@ function validateAndFormatName($value):array {
 }
 
 if(filter_has_var(INPUT_POST, 'signup')) {
-    $username = trim(filter_input(INPUT_POST, 'username', FILTER_UNSAFE_RAW));
+    $username = trim(string: filter_input(INPUT_POST, 'username', FILTER_UNSAFE_RAW));
     $firstname = trim(filter_input(INPUT_POST, 'firstname', FILTER_UNSAFE_RAW));
     $lastname = trim(filter_input(INPUT_POST, 'lastname', FILTER_UNSAFE_RAW));
-    $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+    $email = trim(string: filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
     $password = filter_input(INPUT_POST, 'password', FILTER_UNSAFE_RAW);
     $passwordConf = filter_input(INPUT_POST, 'passwordConf', FILTER_UNSAFE_RAW);
 

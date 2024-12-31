@@ -4,6 +4,9 @@ use ch\RatingManager;
 
 require_once './config/base_url.php';
 
+unset($_SESSION['movie_to_delete']);
+
+
 $db = new RatingManager();
 
 $rateErr = $commentErr = $errorMessage = "";
@@ -36,21 +39,46 @@ if(filter_has_var(INPUT_POST, 'rate')) {
 
 }
 
-if(filter_has_var(INPUT_POST, 'delete-rating')) {
+$delete = false; 
+
+if(filter_has_var(INPUT_POST, var_name: 'delete-rating')) {
     $ratingId = (int)filter_input(INPUT_POST, 'rating_id', FILTER_VALIDATE_INT);
+    $movieId = (int)filter_input(INPUT_POST, 'movie_id', FILTER_VALIDATE_INT);
+
     
     $rating = $db->getRatingDatasById($ratingId);
     
-    $movieId = $_GET['id'];
     $userId = $_SESSION['user']['id'];
 
     if(empty($rating)){
         throw new Exception("No corresponding rating could be found.");
-    }else if($rating['movie_id'] == $movieId && $rating['user_id'] == $userId){
-        $db->deleteRating($ratingId);
-        header("Location: " . BASE_URL . "movie.php?id=" . $movieId);
-        exit();
+    }else if($rating['movie_id'] == $movieId && $rating['user_id'] == $userId || $_SESSION['user']['role'] === 'admin'){
+        $_SESSION['movie_to_delete'] = $movieId;
     }else{
         throw new Exception("No corresponding rating could be found.");
+    }
+}
+
+if(filter_has_var(INPUT_POST, 'confirmation')) {
+    $ratingId = (int)filter_input(INPUT_POST, 'rating_id', FILTER_VALIDATE_INT);
+    $movieId = (int)filter_input(INPUT_POST, 'movie_id', FILTER_VALIDATE_INT);
+
+    
+    $confirmation = (int)filter_input(INPUT_POST, 'confirmation', FILTER_VALIDATE_INT);
+    
+    $userId = $_SESSION['user']['id'];
+
+    if($confirmation !== 1){
+        unset($_SESSION['movie_to_delete']);
+    } else {
+        $rating = $db->getRatingDatasById($ratingId);
+        if(empty($rating)){
+            throw new Exception("No corresponding rating could be found.");
+        }else if($rating['movie_id'] == $movieId && $rating['user_id'] == $userId || $_SESSION['user']['role'] === 'admin'){
+            $db->deleteRating($ratingId);
+            unset($_SESSION['movie_to_delete']);
+        }else{
+            throw new Exception("No corresponding rating could be found.");
+        }
     }
 }

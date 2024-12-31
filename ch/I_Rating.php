@@ -10,4 +10,5 @@ interface I_Rating {
     public function getRatingDatasById($ratingId):array;
     public function getRatingsCount(?string $idType, ?int $id):int;
     public function deleteRating($ratingId):bool;
+    public function deleteUserRatings($userId):bool;
 }

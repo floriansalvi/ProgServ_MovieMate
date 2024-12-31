@@ -237,6 +237,22 @@ class UserManager extends DbManager implements I_User {
         } 
     }
 
+    public function getUsersCount():int {
+    
+        $sql = "SELECT COUNT(*) as total FROM user";
+        
+        $stmt = $this->getDB()->prepare($sql);
+
+        try {
+            $stmt->execute();
+            $usersAmount = (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return 0;
+        }
+        return $usersAmount;
+    }
+
     public function deleteUser($id):bool {
         $sql = "DELETE FROM user WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);

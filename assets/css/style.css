@@ -254,7 +254,7 @@ header {
     padding-top: 5rem;
     margin-top: -5rem;
     top: calc(50% + 40px + 1rem);
-    left: -50%;
+    left: +50%;
     transform: translateX(-50%);
     border-radius: 1rem;
     z-index: 999;
@@ -444,7 +444,19 @@ article.rating-container {
     position: relative;
 }
 
-#rating-delete > button{
+#delete-rating-confirmation {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+}
+
+#delete-rating-confirmation label {
+    display: inline-flex;
+    align-items: center;
+}
+
+#delete-rating > button{
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -459,8 +471,12 @@ p.rating-comment {
     text-align: justify;
 }
 
-#rating-delete > button:hover{
+#delete-rating > button:hover, #delete-rating-confirmation > label#delete-rating-confirmation-yes:hover {
     color: var(--clr-error);
+}
+
+#delete-rating-confirmation > label#delete-rating-confirmation-no:hover {
+    color: var(--clr-success);
 }
 
 article.rating-container:hover {
@@ -557,6 +573,281 @@ div.new-rating-rate > label:hover {
 }
 
 .alert-danger {
+    font-size: 0.75rem;
     color: var(--clr-error);
     margin-bottom: 0.5rem;
+}
+
+main.main-profile {
+    background-color: var(--clr-primary-bg);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    width: inherit;
+}
+
+div.profile-cover-container {
+    height: 20rem;
+    width: 20rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+div.profile-info {
+    width: ?;
+}
+
+main.main-profile form {
+    display: flex;
+    flex-direction: column;
+}
+
+main.main-profile form label {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+main.main-profile div h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+}
+
+main.main-profile div button {
+    margin-top : 1rem;
+}
+
+main.main-profile div p {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+main.main-profile form p {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+main.main-profile form input {
+    margin-bottom: 0.75rem;
+    border: solid 2px var(--clr-accent-light);
+}
+
+main.main-profile form .username {
+    font-size: 2rem;
+    font-weight: 900;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+input.newPasswordConf, input.oldPassword, input.newPassword {
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+div.profile-cover-container > img {
+    height: inherit;
+    width: inherit;
+    object-fit: cover;
+}
+
+div.profile-cover-choice > label > img {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 5rem;
+    object-fit: cover;
+}
+
+div.profile-cover-choice {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+div.profile-cover-choice > label > input:checked + img {
+    border: solid 0.25rem var(--clr-accent-light);
+}
+
+div.profile-cover-choice > label > input:hover + img {
+    transform: scale(1.1);
+}
+
+main.main-profile form button {
+    font-size: 1rem;
+    padding: 0.25rem;
+    background-color: transparent;
+    border: 2px solid var(--clr-accent-light);
+    border-radius: 0.5rem;
+    transition: 200ms ease-in-out;
+}
+
+main.main-profile form button:hover {
+    background-color: var(--clr-accent-light);
+}
+
+main.main-profile a {
+    color: var(--clr-accent-dark);
+    transition: 200ms ease-in-out;
+}
+
+main.main-profile a:hover {
+    color: var(--clr-accent-light);
+}
+
+main.main-profile form#delete-user {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    transition: 200ms ease-in-out;
+}
+
+main.main-profile form#delete-user > label {
+    font-size: 1.5rem;
+    color: var(--clr-primary-text);
+    transition: 200ms ease-in-out;
+}
+
+div.update-user-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+main.main-profile label#delete-user-yes:hover {
+    color: var(--clr-error);
+}
+
+main.main-profile label#delete-user-no:hover {
+    color: var(--clr-success);
+}
+
+main.main-admin {
+    background-color: var(--clr-primary-bg);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+#admin-category {
+    margin-bottom: 2rem;
+}
+
+main.main-admin div {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+form#admin-category {
+    width: inherit;
+    display: flex;
+    gap: 1rem;
+}
+
+form#admin-category label {
+    border-radius: 1rem;
+    width: calc(100% / 3 - 2rem);
+    background-color: var(--clr-secondary-bg);
+    color: var(--clr-secondary-txt);
+    font-weight: 900;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    padding-block: 0.5rem;
+    transition: 200ms ease-in-out;
+}
+
+form#admin-category label:hover {
+    background-color: var(--clr-accent-dark);
+}
+
+form#admin-category label.selected {
+    background-color: var(--clr-accent-dark);
+}
+
+main.main-admin article {
+    border-radius: 1rem;
+    padding: 1rem;
+    background-color: var(--clr-white);
+    box-shadow: var(--clr-shadow) 0px 7px 15px 0px;
+    transition: 200ms ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    transition: 200ms ease-in-out;
+}
+
+main.main-admin article h2 {
+    font-size: 1.5rem;
+}
+
+main.main-admin article p {
+    font-size: 1rem;
+}
+
+main.main-admin article strong.bold {
+    font-weight: 900;
+}
+
+main.main-admin article strong.regular {
+    font-weight: 400;
+}
+
+main.main-admin article a {
+    transition: 200ms ease-in-out;
+}
+
+main.main-admin article a:hover {
+    color: var(--clr-accent-dark);
+}
+
+main.main-admin article:hover {
+    transform: scale(1.025);
+}
+
+main.main-admin form {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    transition: 200ms ease-in-out;
+}
+
+.main-admin .form-delete button{
+    font-size: 1.5rem;
+    background-color: transparent;
+    color: var(--clr-primary-text);
+    transition: 200ms ease-in-out;
+}
+
+.main-admin .form-delete {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+}
+
+.main-admin .form-delete label {
+    display: inline-flex;
+    align-items: center;
+}
+
+.main-admin .form-delete button:hover, .main-admin article .form-delete label#delete-confirmation-yes:hover {
+    color: var(--clr-error);
+}
+
+.main-admin article .form-delete label#delete-confirmation-no:hover {
+    color: var(--clr-success);
 }

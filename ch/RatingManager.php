@@ -153,4 +153,43 @@ class RatingManager extends DbManager implements I_Rating {
             return false;
         } 
     }
+
+    public function deleteUserRatings($userId):bool {
+        $sqlSelectDistinct = "SELECT DISTINCT movie_id FROM rating WHERE user_id = :user_id;";
+        $stmtSelectDistinct = $this->getDB()->prepare($sqlSelectDistinct);
+        $stmtSelectDistinct->bindParam('user_id', $userId, PDO::PARAM_INT);
+        try {
+            $stmtSelectDistinct->execute();
+            $movies = $stmtSelectDistinct->fetchAll(PDO::FETCH_ASSOC);
+            $movieIds = array_map(function($movie) {
+                return $movie['movie_id'];
+            }, $movies);
+        } catch (\PDOException $e){
+            error_log($e->getMessage());
+        }
+        
+        $sqlDelete = "DELETE FROM rating WHERE user_id = :user_id;";
+        $stmtDelete = $this->getDB()->prepare($sqlDelete);
+        $stmtDelete->bindParam('user_id', $userId, PDO::PARAM_INT);
+        try {
+            $stmtDelete->execute();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+        } 
+
+        if(!empty($movies)){
+            $moviesIdsList = implode(', ', array_fill(0, count($movieIds), '?'));
+            $sqlUpdate = "UPDATE movie SET rating_avg = (SELECT AVG(rate) FROM rating WHERE movie_id = movie.id) WHERE id IN ($moviesIdsList);";
+            $stmtUpdate = $this->getDB()->prepare($sqlUpdate);
+            try {
+                $stmtUpdate->execute($movieIds);
+                return true;
+            } catch (\PDOException $e){
+                error_log($e->getMessage());
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
 }
