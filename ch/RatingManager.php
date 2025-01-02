@@ -140,7 +140,7 @@ class RatingManager extends DbManager implements I_Rating {
     }
 
     public function deleteRating($ratingId):bool {
-        $rating = $this->getRatingDatasById($ratingId);
+        $rating = $this->getRatingDatasById(ratingId: $ratingId);
         $sql = "DELETE FROM rating WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
         $stmt->bindParam('id', $ratingId, \PDO::PARAM_INT);
@@ -192,4 +192,18 @@ class RatingManager extends DbManager implements I_Rating {
             return true;
         }
     }
+    
+    public function deleteMovieRatings($movieId):bool {
+        $sql = "DELETE FROM rating WHERE movie_id = :movie_id;";
+        $stmt = $this->getDB()->prepare($sql);
+        $stmt->bindParam('movie_id', $movieId, PDO::PARAM_INT);
+        try {
+            $stmt->execute();
+            return true; 
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return false;
+        } 
+    }
+
 }

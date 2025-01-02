@@ -27,6 +27,8 @@ class MovieManager extends DbManager implements I_Movie {
     public function saveMovie($title, $description, $realisator, $releaseDate, $duration, $genreId, $coverName):bool {
         $saved = false;
 
+        $addDate = date("Y-m-d");
+
         if(!empty($title) && !empty($description) && !empty($realisator) && !empty($releaseDate) && !empty($duration) && !empty($genreId) && !empty($coverName)){
             $datas = [
                 'title' => $title,
@@ -34,10 +36,11 @@ class MovieManager extends DbManager implements I_Movie {
                 'realisator' => $realisator,
                 'release_date' => $releaseDate,
                 'duration' => $duration,
+                'add_date' => $addDate,
                 'genre_id' => $genreId,
                 'cover_name' => $coverName
             ];
-            $sql = "INSERT INTO movie (title, description, realisator, release_date, duration, genre_id, cover_name) VALUES "."(:title, :description, :realisator, :release_date, :duration, :genre_id, :cover_name);";
+            $sql = "INSERT INTO movie (title, description, realisator, release_date, duration, add_date, genre_id, cover_name) VALUES "."(:title, :description, :realisator, :release_date, :duration, :add_date, :genre_id, :cover_name);";
             $stmt = $this->getDB()->prepare($sql);
             try {
                 $stmt->execute($datas);

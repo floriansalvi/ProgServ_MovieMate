@@ -3,6 +3,7 @@
 use ch\UserManager;
 use ch\MovieManager;
 use ch\RatingManager;
+use ch\GenreManager;
 
 require_once './config/autoload.php';
 require_once './config/base_url.php';
@@ -15,6 +16,7 @@ unset($_SESSION['rating_to_delete']);
 $dbMovie = new MovieManager();
 $dbUser = new UserManager();
 $dbRating = new RatingManager();
+$dbGenre = new GenreManager();
 
 
 $category = $_GET['cat'] ?? 0;
@@ -104,6 +106,7 @@ if(filter_has_var(INPUT_POST, 'movie-confirmation')) {
             throw new Exception("No corresponding movie could be found.");
         }else if($_SESSION['user']['role'] === 'admin'){
             $dbMovie->deleteMovie($movie['id']);
+            $dbRating->deleteMovieRatings($movieId);
             unset($_SESSION['movie_to_delete']);
         }else{
             unset($_SESSION['movie_to_delete']);
@@ -215,9 +218,21 @@ switch ($category) {
         $movies = $dbMovie->getMovies('title', 'ASC', null, $itemsShown, null);
         $itemsAmount = $dbMovie->getMoviesCount(null);
 
+        $genres = $dbGenre->getAllGenres();
+        $genresSelect = '
+            <select name="genre" id="genre" required>
+                <option value="" disabled selected>Sélectionner un genre</option>
+        ';
+        foreach($genres as $genre) {
+            $genresSelect .= '<option value="' . htmlspecialchars($genre['id']) . '">' . htmlspecialchars($genre['title']) . '</option>';
+        }
+        $genresSelect .= '
+            </select>
+        ';
+
         $content = '
             <h2>Films publiés : ' . $dbMovie->getMoviesCount(null) . '</h2>
-            <form action ="" method="post" class="form-add-movie">
+            <form action ="" method="post" class="form-add-movie" enctype="multipart/form-data">
                 <h3>Ajouter un film</h3>
                 <div>
                     <label for="title">Titre</label>
@@ -245,11 +260,16 @@ switch ($category) {
                     ' . $durationErr . '
                 </div>
                 <div>
+                    <label for="genre">Genre</label>
+                    ' . $genresSelect . $genreErr . '
+                </div>
+                <div>
                     <label for="cover">Image de couverture</label>
                     <input type="file" name="cover" class="cover">
                     ' . $coverErr . '
                 </div>
                 <button type="submit" name="movie" class="button">Publier le film</button>
+                ' . $successMessage . '
             </form>
         ';
         foreach($movies as $movie) {
@@ -265,11 +285,11 @@ switch ($category) {
                         <input type="hidden" name="movie_id" value="' . $movie['id'] . '">
                         <label id="delete-confirmation-yes">
                             <input type="radio" name="movie-confirmation" value="0" onchange="this.form.submit()">
-                            <i class="fa-solid fa-xmark">╳</i>
+                            <i class="fa-solid fa-xmark"></i>
                         </label>
                         <label id="delete-confirmation-no">
                             <input type="radio" name="movie-confirmation" value="1" onchange="this.form.submit()">
-                            <i class="fa-solid fa-check">✓</i>
+                            <i class="fa-solid fa-check"></i>
                         </label>
                     </form>
                 ';
@@ -277,7 +297,7 @@ switch ($category) {
                 $content .= '
                     <form action="" method="post" class="form-delete">
                         <input type="hidden" name="movie_id" value="' . $movie['id'] . '">
-                        <button type="submit" name="delete-movie"><i class="fa-solid fa-xmark">╳</i></button>
+                        <button type="submit" name="delete-movie"><i class="fa-solid fa-xmark"></i></button>
                     </form>
                     ';
             };
@@ -327,11 +347,11 @@ switch ($category) {
                         <input type="hidden" name="user_id" value="' . $user['id'] . '">
                         <label id="delete-confirmation-yes">
                             <input type="radio" name="user-confirmation" value="0" onchange="this.form.submit()">
-                            <i class="fa-solid fa-xmark">╳</i>
+                            <i class="fa-solid fa-xmark"></i>
                         </label>
                         <label id="delete-confirmation-no">
                             <input type="radio" name="user-confirmation" value="1" onchange="this.form.submit()">
-                            <i class="fa-solid fa-check">✓</i>
+                            <i class="fa-solid fa-check"></i>
                         </label>
                     </form>
                 ';
@@ -339,7 +359,7 @@ switch ($category) {
                 $content .= '
                     <form action="" method="post" class="form-delete">
                         <input type="hidden" name="user_id" value="' . $user['id'] . '">
-                        <button type="submit" name="delete-user"><i class="fa-solid fa-xmark">╳</i></button>
+                        <button type="submit" name="delete-user"><i class="fa-solid fa-xmark"></i></button>
                     </form>
                     ';
             };
@@ -371,11 +391,11 @@ switch ($category) {
                         <input type="hidden" name="rating_id" value="' . $rating['id'] . '">
                         <label id="delete-confirmation-yes">
                             <input type="radio" name="rating-confirmation" value="0" onchange="this.form.submit()">
-                            <i class="fa-solid fa-xmark">╳</i>
+                            <i class="fa-solid fa-xmark"></i>
                         </label>
                         <label id="delete-confirmation-no">
                             <input type="radio" name="rating-confirmation" value="1" onchange="this.form.submit()">
-                            <i class="fa-solid fa-check">✓</i>
+                            <i class="fa-solid fa-check"></i>
                         </label>
                     </form>
                 ';
@@ -383,7 +403,7 @@ switch ($category) {
                 $content .= '
                     <form action="" method="post" class="form-delete">
                         <input type="hidden" name="rating_id" value="' . $rating['id'] . '">
-                        <button type="submit" name="delete-rating"><i class="fa-solid fa-xmark">╳</i></button>
+                        <button type="submit" name="delete-rating"><i class="fa-solid fa-xmark"></i></button>
                     </form>
                     ';
             };

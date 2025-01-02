@@ -43,11 +43,11 @@ ob_start(); ?>
                                 $fullStar++;
                             }
                             for($i = 0; $i < $fullStar; $i++){
-                                echo "<i class='fa-solid fa-star' id='star-full'>*</i>";
+                                echo "<i class='fa-solid fa-star' id='star-full'></i>";
                             }
 
                             if($decimalStar > 0){
-                                echo "<i class='fa-solid fa-star-half' id='star-decimal'>*</i>";
+                                echo "<i class='fa-solid fa-star-half' id='star-decimal'></i>";
                             }
                         
                             echo "</div><p>" . htmlspecialchars(round($movie['rating_avg'], 1)) . "</p></div>";
@@ -80,9 +80,9 @@ ob_start(); ?>
             $linkForwardParamString = http_build_query($linkForwardParam);
             $linkForward = BASE_URL . "movies.php" . ($linkForwardParamString ? "?" . $linkForwardParamString : "");
 
-            echo $page > 1 ? "<a href='" . $linkBackward . "'><i class='fa-solid fa-chevron-left'>Précédent</i></a>" : "";
+            echo $page > 1 ? "<a href='" . $linkBackward . "'><i class='fa-solid fa-chevron-left'></i></a>" : "";
             echo $pagesAmount > 1 ? "<p>" . $page . "</p>" : "";
-            echo $page < $pagesAmount ? "<a href='" . $linkForward . "'><i class='fa-solid fa-chevron-right'>Suivant</i></a>" : "";
+            echo $page < $pagesAmount ? "<a href='" . $linkForward . "'><i class='fa-solid fa-chevron-right'></i></a>" : "";
         ?>
     </div>
 </main>

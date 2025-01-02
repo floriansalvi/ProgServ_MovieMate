@@ -11,4 +11,5 @@ interface I_Rating {
     public function getRatingsCount(?string $idType, ?int $id):int;
     public function deleteRating($ratingId):bool;
     public function deleteUserRatings($userId):bool;
+    public function deleteMovieRatings($movieId):bool;
 }

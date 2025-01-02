@@ -58,7 +58,7 @@ $title = $movie['title'];
 ob_start(); ?>
 
 <main class="main-movie">
-        <a href='<?= $_SESSION['lastVisitedPage'] ?>' class="back-btn"><i class="fa-solid fa-arrow-left">Retour</i></a>
+        <a href='<?= $_SESSION['lastVisitedPage'] ?>' class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
         <div>
             <section class="movie-card">
                 <div class="movie-cover-container">
@@ -80,11 +80,11 @@ ob_start(); ?>
                                     $fullStar++;
                                 }
                                 for($i = 0; $i < $fullStar; $i++){
-                                    echo "<i class='fa-solid fa-star' id='star-full'>*</i>";
+                                    echo "<i class='fa-solid fa-star' id='star-full'></i>";
                                 }
 
                                 if($decimalStar > 0){
-                                    echo "<i class='fa-solid fa-star-half' id='star-decimal'>*</i>";
+                                    echo "<i class='fa-solid fa-star-half' id='star-decimal'></i>";
                                 }
                         ?></span>
                     </p>
@@ -117,7 +117,7 @@ ob_start(); ?>
                                 <textarea placeholder="J'ai trouvé ce film…" maxlength="500" rows="3" name="comment" class="comment"></textarea>
                                 <?php echo $commentErr;?>
                             </div>
-                            <button type="submit" name="rate" class="button"><i class="fa-solid fa-arrow-right">Publier</i></button>
+                            <button type="submit" name="rate" class="button"><i class="fa-solid fa-arrow-right"></i></button>
                             <?php echo $errorMessage; ?>
                         </form>
                     <?php endif;
@@ -138,7 +138,7 @@ ob_start(); ?>
                                         <p class="rating-stars">
                                         <?php
                                             for($i = 0; $i < $rating['rate']; $i++):?>
-                                                <i class='fa-solid fa-star' id='star-full'>*</i>
+                                                <i class='fa-solid fa-star' id='star-full'></i>
                                             <?php endfor; ?>
                                         </p>
                                         <?php
@@ -165,18 +165,18 @@ ob_start(); ?>
                                             <input type="hidden" name="movie_id" value="<?= $_GET['id'] ?>">
                                             <label id="delete-rating-confirmation-yes">
                                                 <input type="radio" name="confirmation" value="0" onchange="this.form.submit()">
-                                                <i class="fa-solid fa-xmark">X</i>
+                                                <i class="fa-solid fa-xmark"></i>
                                             </label>
                                             <label id="delete-rating-confirmation-no">
                                                 <input type="radio" name="confirmation" value="1" onchange="this.form.submit()">
-                                                <i class="fa-solid fa-check">✓</i>
+                                                <i class="fa-solid fa-check"></i>
                                             </label>
                                         </form>
                                     <?php else : ?>
                                         <form action="" method="post" class="form" id="delete-rating">
                                             <input type="hidden" name="rating_id" value="<?= $rating['id'] ?>">
                                             <input type="hidden" name="movie_id" value="<?= $_GET['id'] ?>">
-                                            <button type="submit" name="delete-rating"><i class="fa-solid fa-xmark">X</i></button>
+                                            <button type="submit" name="delete-rating"><i class="fa-solid fa-xmark"></i></button>
                                         </form>
                                     <?php endif; ?>
                                <?php endif; ?> 
