@@ -55,8 +55,7 @@ La majorité des points mentionnés dans la section "3. Besoins et fonctionnalit
 # points bonus
 - Multi-linguisme : pas intégrés par manque de temps.
 - Déploiement : pas intégrés par manque de temps.
-- Commen
+- Commen...
 
 ### Divers
 - le poids des images de films ne peuvent pas excéder 2 MB.
-- 

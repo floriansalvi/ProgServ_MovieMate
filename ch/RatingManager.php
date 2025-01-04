@@ -5,25 +5,52 @@ namespace ch;
 use Exception;
 use \PDO;
 
+/**
+ * RatingManager class handles operations related to movies in the database.
+ * It extends the DbManager class to inherit the database connection functionality.
+ */
 class RatingManager extends DbManager implements I_Rating {
 
+    /**
+     * Class constructor
+     * 
+     * Initializes the RatingManager by calling the parent constructor.
+     * The parent constructor establishes the database connection by invoking the DbManager's __construct() method.
+     * This allows RatingManager to access the database connection and perform operations related to movies.
+     */
     public function __construct(){
         parent::__construct();
     }
 
+    /**
+    * Return a boolean that specifies if a specific movie has already been rated by a specific user.
+    * 
+    * @param int $movieId The id of the movie
+    * @param int $userId The id of the user
+    *
+    * @return bool Returns true if the movie is already rated by the user, false if the title is not already used
+    */
     public function isMovieRatedByUser($movieId, $userId):bool {
+        
+        // Prepare data for insertion
         $datas = [
             'movie_id' => (int)$movieId,
             'user_id' => (int)$userId
         ];
+
+        // 
         $sql = "SELECT COUNT(*) FROM rating WHERE movie_id = :movie_id AND user_id = :user_id;";
         $stmt = $this->getDB()->prepare($sql);
         try {
+            // Attempt to execute the SQL query.
             $stmt->execute($datas);
+            // If the SQL query is successfuly executed, returns an boolean specifying if the movie is already rated by the user or not.
             return $stmt->fetchColumn()>0;
         } catch (\PDOException $e) {
+            // If an execption is thrown, log the error message.
             error_log($e->getMessage());
-            return false;
+            // If the SQL query could not be executed, returns true.
+            return true;
         }
     }
 
@@ -192,7 +219,7 @@ class RatingManager extends DbManager implements I_Rating {
             return true;
         }
     }
-    
+
     public function deleteMovieRatings($movieId):bool {
         $sql = "DELETE FROM rating WHERE movie_id = :movie_id;";
         $stmt = $this->getDB()->prepare($sql);
