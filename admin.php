@@ -1,15 +1,14 @@
 <?php
 
-require_once './controllers/protect.php';
-require_once 'controllers/profileValidation.php';
-require_once 'controllers/lastVisitedPage.php';
 require_once './config/base_url.php';
+require_once './controllers/protect.php';
+require_once 'controllers/lastVisitedPage.php';
+require_once 'controllers/profileValidation.php';
 require_once './controllers/adminValidation.php';
 
 
 if($_SESSION['user']['role'] !== "admin") {
-    $location = $_SESSION['lastVisitedPage'] ?? BASE_URL;
-    header("Location: " . $location);
+    header("Location: " . BASE_URL);
     exit();
 }
 

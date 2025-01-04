@@ -58,7 +58,7 @@ class MovieManager extends DbManager implements I_Movie {
 
         $sql = "SELECT * FROM movie";
 
-        $validColumns = ['title', 'realisator', 'release_date', 'duration', 'add_date', 'genre_id'];
+        $validColumns = ['title', 'realisator', 'release_date', 'duration', 'add_date', 'genre_id', 'rating_avg'];
         $validOrders = ['ASC', 'DESC'];
         $sortColumn = in_array($sortColumn, $validColumns) ? $sortColumn : 'add_date';
         $sortOrder = in_array($sortOrder, $validOrders) ? $sortOrder : 'DESC';
@@ -155,11 +155,16 @@ class MovieManager extends DbManager implements I_Movie {
     }
 
     public function deleteMovie($movieId):bool {
+        $movie = $this->getMovieDatas($movieId);
         $sql = "DELETE FROM movie WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
-        $stmt->bindParam('id', $movieId, \PDO::PARAM_INT);
+        $stmt->bindParam('id', $movieId, PDO::PARAM_INT);
         try {
             $stmt->execute();
+            $coverPath = $_SERVER['DOCUMENT_ROOT'] . "/ProgServ_MovieMate/assets/img/movie_cover/" . $movie['cover_name'];
+            if (file_exists($coverPath)) {
+                unlink($coverPath);
+            }
             return true; 
         } catch (PDOException $e) {
             error_log($e->getMessage());

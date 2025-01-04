@@ -138,31 +138,7 @@ if(filter_has_var(INPUT_POST, 'movie')) {
             throw new Exception("L'image n'a pas pu être uploadée.");
         }else{
             $dbMovie->saveMovie($title, $description, $realisator, $releaseDate, $duration, $genreId, $coverName);
+            $successMessage = '<div class="alert alert-sucess">Le film a été publié.</div>';
         }
     }
 }
-
-
-
-
-
-
-
-
-                   
-
-//     if(!$validationErr){
-//         $firstname = $firstnameValidation['formatedName'];
-//         $lastname = $lastnameValidation['formatedName'];
-//         $passwordHash = password_hash($password, PASSWORD_ARGON2ID);
-
-//         $isUserSaved = $db->saveUser($username, $firstname, $lastname, $email, $passwordHash);
-
-//         if(!$isUserSaved){
-//             throw new Exception("L'inscription n'a pas pu être effectuée.");
-//         }else{
-//             header("Location: " . BASE_URL . "confirmation.php" . "?username=" . urlencode($username));
-//             exit();
-//         }
-//     }
-// }
