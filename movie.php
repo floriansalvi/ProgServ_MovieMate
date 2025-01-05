@@ -159,7 +159,7 @@ ob_start(); ?>
                                     </div>
                                 </div>
                                 <?php if($rating['user_id'] === $_SESSION['user']['id'] || $_SESSION['user']['role'] === 'admin') : ?>
-                                    <?php if(isset($_SESSION['movie_to_delete']) && $rating['movie_id'] == $_SESSION['movie_to_delete']) : ?>
+                                    <?php if(isset($_SESSION['rating_to_delete']) && $rating['id'] == $_SESSION['rating_to_delete']) : ?>
                                         <form action="" method="post" class="form" id="delete-rating-confirmation">
                                             <input type="hidden" name="rating_id" value="<?= $rating['id'] ?>">
                                             <input type="hidden" name="movie_id" value="<?= $_GET['id'] ?>">

@@ -5,28 +5,44 @@ use ch\UserManager;
 require_once './config/autoload.php';
 require_once './config/base_url.php';
 
+// Initialize error variables and a flag for validation errors.
 $usernameErr = $firstnameErr = $lastnameErr = $emailErr = $passwordErr = $passwordConfErr = "";
 $validationErr = false;
 
+/**
+ * Validates and formats a name input.
+ * 
+ * @param string $value The input value to validate.
+ * @return array Contains 'isValid', 'error', and 'formatedName'.
+ */
 function validateAndFormatName($value):array {
     $isValid = true;
     $error = "";
     $formatedName = "";
     
+    // Check if the input length exceeds 32 characters.
     if(strlen($value) > 32){
         $isValid = false;
         $error = $error . "Ce champ peut contenir 32 caractères au maximum.";
     }
 
+    // Ensure the input matches the allowed pattern for names.
     if(!preg_match("/^([a-zA-Zäàâèêéïöôüç]+([-'\s][a-zA-Zäàâèêéïöôüç]+)*)$/", $value)){
         $isValid = false;
         $error = $error . "Le champ ne contenir que des lettres, espaces, tirets et apostrophes.";
     }
 
+    // Format the name if there are no errors.
     if(empty($error)){
         $formatedName = ucwords(strtolower($value), " \t\r\n\f\v-'");
     }
 
+    /**
+     * Return
+     *      'isValid' a bool that indicates whether the input is valid or not
+     *      'error' a string that contains errors messages.
+     *      'formatedName' a string that contains the formated input.
+     */
     return [
         'isValid' => $isValid,
         'error' => $error,
@@ -34,7 +50,9 @@ function validateAndFormatName($value):array {
     ];
 }
 
+// Check if the signup form has been submitted
 if(filter_has_var(INPUT_POST, 'signup')) {
+    // Retrieve and trim form inputs.
     $username = trim(string: filter_input(INPUT_POST, 'username', FILTER_UNSAFE_RAW));
     $firstname = trim(filter_input(INPUT_POST, 'firstname', FILTER_UNSAFE_RAW));
     $lastname = trim(filter_input(INPUT_POST, 'lastname', FILTER_UNSAFE_RAW));
@@ -44,6 +62,7 @@ if(filter_has_var(INPUT_POST, 'signup')) {
 
     $db = new UserManager();
 
+    // Validate the username
     if(empty($username)){
         $usernameErr = '<div class="alert alert-danger">Ce champ ne peut pas être vide.</div>';
         $validationErr = true; 
@@ -55,6 +74,7 @@ if(filter_has_var(INPUT_POST, 'signup')) {
         $validationErr = true;        
     }
 
+    // Validate the first name
     $firstnameValidation = validateAndFormatName($firstname);
     if(empty($firstname)){
         $firstnameErr = '<div class="alert alert-danger">Ce champ ne peut pas être vide.</div>';
@@ -64,6 +84,7 @@ if(filter_has_var(INPUT_POST, 'signup')) {
         $validationErr = true;
     }
 
+    // Validate the last name
     $lastnameValidation = validateAndFormatName($lastname);
     if(empty($lastname)){
         $lastnameErr = '<div class="alert alert-danger">Ce champ ne peut pas être vide.</div>';
@@ -73,6 +94,7 @@ if(filter_has_var(INPUT_POST, 'signup')) {
         $validationErr = true;
     }
 
+    // Validate the email
     if(empty($email)){
         $emailErr = '<div class="alert alert-danger">Ce champ ne peut pas être vide.</div>';
         $validationErr = true;    
@@ -87,6 +109,7 @@ if(filter_has_var(INPUT_POST, 'signup')) {
         $validationErr = true;   
     }
 
+    // Validate the password
     if(empty($password)){
         $passwordErr = '<div class="alert alert-danger">Ce champ ne peut pas être vide.</div>';
         $validationErr = true;
@@ -95,6 +118,7 @@ if(filter_has_var(INPUT_POST, 'signup')) {
         $validationErr = true;
     }
 
+    // Validate the password confirmation
     if(empty($passwordConf)){
         $passwordConfErr = '<div class="alert alert-danger">Ce champ ne peut pas être vide.</div>';
         $validationErr = true;
@@ -103,13 +127,18 @@ if(filter_has_var(INPUT_POST, 'signup')) {
         $validationErr = true;
     }                       
 
+    // If no validation errors, proceed to save the user.
     if(!$validationErr){
+        
+        // Retrieves the formated names and hash the password.
         $firstname = $firstnameValidation['formatedName'];
         $lastname = $lastnameValidation['formatedName'];
         $passwordHash = password_hash($password, PASSWORD_ARGON2ID);
 
+        // Attempt to save the user in the database.
         $isUserSaved = $db->saveUser($username, $firstname, $lastname, $email, $passwordHash);
 
+        // Redirect to the confirmation page if the user is successfully saved.
         if(!$isUserSaved){
             throw new Exception("L'inscription n'a pas pu être effectuée.");
         }else{

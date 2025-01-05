@@ -607,10 +607,6 @@ div.profile-cover-container {
     border-radius: 1rem;
 }
 
-div.profile-info {
-    width: ?;
-}
-
 main.main-profile form {
     display: flex;
     flex-direction: column;
