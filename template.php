@@ -1,3 +1,6 @@
+<!-- 
+Template for every pages of the website.
+-->
 <html lang="fr">
     <head>
         <meta charset="UTF-8">

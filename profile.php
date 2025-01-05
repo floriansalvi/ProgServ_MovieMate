@@ -3,15 +3,20 @@
 require_once './controllers/protect.php';
 require_once 'controllers/profileValidation.php';
 
+// Create a DateTime object from the user's 'created_at' session value
 $dateObj = DateTime::createFromFormat('Y-m-d H:i:s', $_SESSION['user']['created_at']);
-$format = new IntlDateFormatter(
-    'fr_FR', 
-    IntlDateFormatter::LONG, 
-    IntlDateFormatter::NONE
-);
-$format->setPattern('d MMMM yyyy');
 
+// Setup an IntlDateFormatter for formatting the date in French locale
+$format = new IntlDateFormatter(
+    'fr_FR', // Locale set to French (France)
+    IntlDateFormatter::LONG, // Long date format (e.g., '25 décembre 2025')
+    IntlDateFormatter::NONE // No time format
+);
+$format->setPattern('d MMMM yyyy'); // Custom pattern for date format
+
+// Check if the 'update' page is requested via the GET parameter
 if(isset($_GET['page']) && $_GET['page'] === "update") {
+    // Prepare the form content for updating the profile
     $profileContent = '
     <div class="profile-info">
         <form action="" method="POST" class="form" id="profile-update">
@@ -51,6 +56,7 @@ if(isset($_GET['page']) && $_GET['page'] === "update") {
     </div>
 ';
 }else{
+    // Prepare the default profile content displaying user information
     $profileContent = '
         <div class="profil-info">
             <h1>' . $_SESSION['user']['username'] . '</h1>
@@ -59,6 +65,7 @@ if(isset($_GET['page']) && $_GET['page'] === "update") {
             <p>Compte créé le ' . $format->format($dateObj) . '</p>
             <div class="update-user-links">
             <a href="' . BASE_URL . 'profile.php?page=update">Mettre à jour votre profil</a>';
+            // Check if 'delete' page is requested and show the deletion confirmation form
             if(isset($_GET['page']) && $_GET['page'] = "delete") {
                 $profileContent .= '
                     <form action="" method="post" class="form" id="delete-user">
@@ -73,6 +80,7 @@ if(isset($_GET['page']) && $_GET['page'] === "update") {
                     </form>
             ';
             } else {
+                // Link to delete the profile
                 $profileContent .= '<a href="' . BASE_URL . 'profile.php?page=delete">Supprimer  votre profil</a>';
             }
     $profileContent .= '  
@@ -88,7 +96,7 @@ ob_start();
     <div class="profile-cover-container">
         <img src="assets/img/user_cover/user_cover_<?= $_SESSION['user']['cover'] ?>.jpg" alt="Profile cover" class="profile-cover">
     </div>
-    <?= $profileContent ?>
+    <?= $profileContent ?>  <!-- Display the profile content -->
 </main>
 
 

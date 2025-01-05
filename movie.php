@@ -10,48 +10,64 @@ require_once 'controllers/protect.php';
 require_once 'controllers/ratingValidation.php';
 require_once './config/base_url.php';
 
+// Create an instance of MovieManager
 $dbMovie = new MovieManager();
+
+// Check if the 'id' parameter is provided in the URL, sanitize it
 if(isset($_GET['id'])){
     $movieId = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
 }else{
-    throw new Exception("Cette page n'existe pas.");
-}
-$movie = $dbMovie->getMovieDatas($movieId);
-if(empty($movie)){
+    // If no ID, throw an exception (page does not exist)
     throw new Exception("Cette page n'existe pas.");
 }
 
+// Fetch movie details from the database
+$movie = $dbMovie->getMovieDatas($movieId);
+if(empty($movie)){
+    // If the movie is not found, throw an exception (page does not exist)
+    throw new Exception("Cette page n'existe pas.");
+}
+
+// Calculate the movie duration in hours and minutes
 $minutes = $movie['duration'] % 60;
 $hours = ($movie['duration'] - $minutes) / 60;
 $duration = $hours . "h" . $minutes . "m";
 
+// Create instance of RatingManager to manage ratings
 $dbRating = new RatingManager();
 $ratingsAmount = $dbRating->getRatingsCount("movie", $movieId);
 
+// Set the number of ratings to display per load
 $ratingsPerLoad = 5;
 
+// Calculate the maximum number of pages needed for ratings
 if($ratingsAmount > 0){
     $maxLoads = ceil($ratingsAmount / $ratingsPerLoad);
 }else{
     $maxLoads = 1;
 }
 
+// Fetch the current rating load from the URL, default to 1 if not provided
 $ratingsLoad = $_GET['ra'] ?? 1;
 
+// Validate the ratings load
 if(!filter_var($ratingsLoad, FILTER_VALIDATE_INT)){
     throw new Exception('Cette page n\'existe pas.');
 };
 
+// If the ratingsLoad is '1', redirect to the main page without the load parameter
 if($ratingsLoad === '1'){
     header("Location: " . BASE_URL . "movie.php" . "?id=" . $movieId);
     exit();
 }
 
+// Convert the ratingsLoad to an integer and validate
 $ratingsLoad = (int)$ratingsLoad;
 if($ratingsLoad <= 0 || $ratingsLoad > $maxLoads){
     throw new Exception('Cette page n\'existe pas.');
 }
 
+// Calculate how many ratings to display
 $ratingsShown = $ratingsPerLoad * $ratingsLoad;
 
 $title = $movie['title'];
@@ -70,6 +86,7 @@ ob_start(); ?>
                     <?php if(!empty($movie['rating_avg'])): ?>
                         <p class="rate"><?= htmlspecialchars(round($movie['rating_avg'], 1))?>
                         <span><?php
+                        // Movie rating in stars
                         $movieRating = $movie['rating_avg'];
                                 $fullStar = floor($movieRating);
                                 $decimalStar = 0;
@@ -79,10 +96,13 @@ ob_start(); ?>
                                 if(($movieRating - $fullStar) > 0.75){
                                     $fullStar++;
                                 }
+
+                                // Display full stars
                                 for($i = 0; $i < $fullStar; $i++){
                                     echo "<i class='fa-solid fa-star' id='star-full'></i>";
                                 }
 
+                                // Display half star if applicable
                                 if($decimalStar > 0){
                                     echo "<i class='fa-solid fa-star-half' id='star-decimal'></i>";
                                 }
@@ -95,8 +115,10 @@ ob_start(); ?>
             </section>
             <section class="movie-ratings">
                 <?php
+                    // Fetch the ratings for the movie based on the load
                     $ratings = $dbRating->getRatings("movie", $movieId, $ratingsShown);
                     
+                    // Check if the user has already rated this movie. If not, display the rating form
                     if($dbRating->isMovieRatedByUser($movie['id'], $_SESSION['user']['id']) === false): ?>
                         <form action="" method="post" class="form" id="rate">
                             <h3>Ajouter un avis</h3>
@@ -121,9 +143,12 @@ ob_start(); ?>
                             <?php echo $errorMessage; ?>
                         </form>
                     <?php endif;
+
+                    // Display the ratings if available
                     if(!empty($ratings)){
                         $dbUser = new UserManager();
                         foreach($ratings as $rating):
+                            // Get the user data for the rating
                             $user = $dbUser->getUserById($rating['user_id']);
                             ?>
                             <article class="rating-container">
@@ -142,11 +167,13 @@ ob_start(); ?>
                                             <?php endfor; ?>
                                         </p>
                                         <?php
+                                            // Display the comment if available
                                             if(!empty($rating['comment'])){
                                                 echo "<p class='rating-comment'>" . $rating['comment'] . "</p>";
                                             }
                                             ?>
                                         <?php 
+                                            // Format and display the date of the rating
                                             $dateRating = DateTime::createFromFormat('Y-m-d H:i:s', $rating['created_at']);
                                             $format = new IntlDateFormatter(
                                                 'fr_FR', 
@@ -158,7 +185,9 @@ ob_start(); ?>
                                         <p class="rating-date"><?= $format->format($dateRating) ?></p>
                                     </div>
                                 </div>
-                                <?php if($rating['user_id'] === $_SESSION['user']['id'] || $_SESSION['user']['role'] === 'admin') : ?>
+                                <?php 
+                                    // Allow users or admins to delete their rating
+                                    if($rating['user_id'] === $_SESSION['user']['id'] || $_SESSION['user']['role'] === 'admin') : ?>
                                     <?php if(isset($_SESSION['rating_to_delete']) && $rating['id'] == $_SESSION['rating_to_delete']) : ?>
                                         <form action="" method="post" class="form" id="delete-rating-confirmation">
                                             <input type="hidden" name="rating_id" value="<?= $rating['id'] ?>">
@@ -183,6 +212,7 @@ ob_start(); ?>
                             </article>
                         <?php endforeach;
                     }
+                    // Show "Show more" button if there are more ratings to load
                     if($ratingsShown < $ratingsAmount): ?>
                         <a class="show-more-btn" href="<?= BASE_URL . "movie.php?id=" . $movieId . "&ra=" . $ratingsLoad+1 ?>">Show more ratings</a>
                     <?php endif; ?>

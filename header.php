@@ -19,8 +19,14 @@ require_once './config/base_url.php';
                 <div>
                     <ul>
                         <?php
+
+                        // Create an instance of GenreManager to fetch all genres from the database
                         $db = new GenreManager();
+
+                        // Retrieve all genres
                         $genres = $db->getAllGenres();
+
+                        // Loop through the genres and display each one as a menu item
                         foreach ($genres as $genre): ?>
                             <li><a href="<?= BASE_URL . "movies.php?genre=" . $genre['id'] ?>"><?= htmlspecialchars($genre['title']) ?></a></li>
                         <?php endforeach; ?>
