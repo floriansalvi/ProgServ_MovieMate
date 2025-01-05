@@ -9,7 +9,8 @@ use \PDO;
  * GenreManager class handles operations related to genres in the database.
  * It extends the DbManager class to inherit the database connection functionality.
  */
-class GenreManager extends DbManager {
+
+class GenreManager extends DbManager implements I_Genre {
 
     /**
      * Class constructor
@@ -47,7 +48,8 @@ class GenreManager extends DbManager {
     /**
     * Retrieves information about a specific genre stored in the database and return them.
     * 
-    * @param $id The id of the genre we want to retrieves information of
+    * @param int $id The id of the genre we want to retrieves information of
+    *
     * @return array An array containing the genre's information or an empty array if an error occurs
     */
     public function getGenreDatas($id):array {

@@ -217,6 +217,7 @@ class MovieManager extends DbManager implements I_Movie {
      *               If the movie is not found or an error occurs, returns an empty array.
      */
     public function getMovieDatas($movieId): array {
+        
         // Define the SQL query to retrieve a movie by its ID.
         $sql = "SELECT * FROM movie WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
