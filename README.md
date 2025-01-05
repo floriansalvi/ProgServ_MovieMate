@@ -1,23 +1,30 @@
 Voici les infos à savoir concernant **MovieMate**
 
+### Général
+MovieMate est une plateforme permettant à ses utilsateur.ice.s connecté.e.s de voir différentes informations concernant des films, d'en donner un avis éventuellement accompagné d'un commentaire, de supprimer ses avis. Les utilisateur.ice.s peuvent modifier certaines informations de leur profil via une page profil.
+
+Les administrateur.ice.s peuvent effectuer les même actions mais peuvent aussi ajouter et supprimer des films, supprimer des profil et en modifier le rôle et supprimer des avis.
+
+Les utilisateur.ice.s non connecté.e.s peuvent accèder aux pages listant les films mais ne peuvent pas visionner les pages détaillées et ajouter des commentaires. Ils et elles peuvent cependant se connecter ou créer un compte.
+
 ### Authentification
 
 2 roles peuvent être attribués aux comptes.
 
-- Utilisateur.ice :
+# Utilisateur.ice :
 Correspond à une données vide dans la colonne `role` de la table `user`
 Ils et elles peuvent se connecter, visionner les pages détaillées des films, donner des avis eventuellement accompagnés de commentaires.
 Ils et elles peuvent aussi se déconnecter ou modifier les informations de leur compte (pseudo, mot de passe et image de profil).
 
-# Compte utilisateur.ice déjà crée :
+`Compte utilisateur.ice déjà crée :`
 Nom d'utilisateur : User.jpg
 Mot de passe : progServ123_
 
-- Administrateur.ice :
+# Administrateur.ice :
 Correspond à une données "admin" dans la colonne `role` de la table `user`
 En plus des fonctions utilisteur.ice, ils et elles peuvent accèder à une page admin leur permettant de supprimer ou ajouter des films, supprimer des utilisateur.ice.s ou modifier leur rôle et supprimer des commentaires. Dans les pages détaillées des films, ils et elles peuvent supprimer directement les commentaires.
 
-# Compte Administrateur.ice déjà crée :
+`Compte Administrateur.ice déjà crée :`
 Nom d'utilisateur : MovieMate
 Mot de passe : progServ123_
 
@@ -53,9 +60,9 @@ La majorité des points mentionnés dans la section "3. Besoins et fonctionnalit
 - les admins ne peuvent pas modifier les informations des films (ils doivent être supprimés puis ajouter à nouveau) (manque de temps).
 
 # points bonus
-- Multi-linguisme : pas intégrés par manque de temps.
-- Déploiement : pas intégrés par manque de temps.
-- Commen...
+- Multi-linguisme : pas intégré par manque de temps.
+- Déploiement : pas mis en place par manque de temps.
+- Les commentaires single-line et PHPDoc ont été écrits (50% manuellement et 50% à l'aide de ChatGPT). Les commentaires PHPDoc permettent à certains outils de générer de la documentation automatique.
 
 ### Divers
 - le poids des images de films ne peuvent pas excéder 2 MB.
