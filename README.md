@@ -60,7 +60,7 @@ La majorité des points mentionnés dans la section "3. Besoins et fonctionnalit
 - l'âge des utilisateurs n'est finalement pas demandé car, non pertinent.
 - les admins ne peuvent pas modifier les informations des films (ils doivent être supprimés puis ajouter à nouveau) (manque de temps).
 
-### points bonus
+# Points bonus
 - Multi-linguisme : pas intégré par manque de temps.
 - Déploiement : pas mis en place par manque de temps.
 - Les commentaires single-line et PHPDoc ont été écrits (en partie à l'aide de ChatGPT). Les commentaires PHPDoc permettent à certains outils de générer de la documentation automatique.
