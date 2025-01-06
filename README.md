@@ -63,11 +63,12 @@ La majorité des points mentionnés dans la section "3. Besoins et fonctionnalit
 # points bonus
 - Multi-linguisme : pas intégré par manque de temps.
 - Déploiement : pas mis en place par manque de temps.
-- Les commentaires single-line et PHPDoc ont été écrits (50% manuellement et 50% à l'aide de ChatGPT). Les commentaires PHPDoc permettent à certains outils de générer de la documentation automatique.
+- Les commentaires single-line et PHPDoc ont été écrits (en partie à l'aide de ChatGPT). Les commentaires PHPDoc permettent à certains outils de générer de la documentation automatique.
 
 ### Divers
 - le poids des images de films ne peuvent pas excéder 2 MB.
 - Certains éléments, comme la validation du formulaire signup ou update profile, l'affichage des films dans la page index ou movies, … se répètetent. Nous aurions pu créer des classes suplémentaires pour éviter ces répétitions mais le temps nous le permettait pas. Le fait de ne pas avoir pu faire de réelles maquettes du site avant son implémentation n'a pas aidé à anticiper et à avoir une vue d'ensemble sur ce que nous allions devoir implémenter.
+- Javascript a été uiquement utilisé pour rendre des div entière cliquable sans devoir les imbriquer dans des balises <a> (onclick="")
 
 Mallory Bossel, Colin Schmutz, Florian Salvi
 M52-2
