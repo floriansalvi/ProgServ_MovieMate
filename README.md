@@ -50,6 +50,7 @@ Certains comptes, films, ratings et l'intégralité des genres ont été manuell
 - Être connecté à internet. (nécessaire pour le chargement des pictogrammes de fontawesome)
 - Démarrer MailHog via le terminal et accèder à localhost:8025 (nécessaire lors de la création de comptes et de la vérification par mail).
 - Démarrer MAMP/WAMP/XAMP (PHP, SGBD, Serveur Web);
+- `Utiliser la version 8.2.0 de PHP ou ultérieure`
 - `Adapter le port (actuellement 8888) dans le fichier config/base_url.php`
 
 ### Cahier des charges
@@ -66,3 +67,9 @@ La majorité des points mentionnés dans la section "3. Besoins et fonctionnalit
 
 ### Divers
 - le poids des images de films ne peuvent pas excéder 2 MB.
+- Certains éléments, comme la validation du formulaire signup ou update profile, l'affichage des films dans la page index ou movies, … se répètetent. Nous aurions pu créer des classes suplémentaires pour éviter ces répétitions mais le temps nous le permettait pas. Le fait de ne pas avoir pu faire de réelles maquettes du site avant son implémentation n'a pas aidé à anticiper et à avoir une vue d'ensemble sur ce que nous allions devoir implémenter.
+
+Mallory Bossel, Colin Schmutz, Florian Salvi
+M52-2
+HEIG-VD
+Janvier 2025

@@ -164,7 +164,7 @@ if(filter_has_var(INPUT_POST, 'user-confirmation')) {
             throw new Exception("No corresponding user could be found.");
         }else if($_SESSION['user']['role'] === 'admin'){
             // Delete user if user is admin and user exists.
-            $dbUser->deleteUser($user['id']);
+            $dbUser->deleteUser((int)$user['id']);
             unset($_SESSION['user_to_delete']);
         }else{
             unset($_SESSION['user_to_delete']);

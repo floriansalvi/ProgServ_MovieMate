@@ -474,7 +474,7 @@ class UserManager extends DbManager implements I_User {
         // Define the SQL query to delete the user by its ID.
         $sql = "DELETE FROM user WHERE id = :id;";
         $stmt = $this->getDB()->prepare($sql);
-        $stmt->bindParam('id', $id, \PDO::PARAM_INT);
+        $stmt->bindParam('id', $userId, PDO::PARAM_INT);
         try {
             // Attempt to execute the SQL query.
             $stmt->execute();

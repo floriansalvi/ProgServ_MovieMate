@@ -2,6 +2,7 @@
 session_start();
 require_once './controllers/activationValidation.php';
 require_once 'config/base_url.php';
+
 if(isset($_SESSION['is_logged'])){
     header("Location: " . BASE_URL);
 }
@@ -11,7 +12,7 @@ ob_start(); ?>
 
 <main class="main-activation">
     <div>
-        <h2>Activation de votre compte</h2>
+        <h1>Activation de votre compte</h1>
         <?php echo $message ?>
     </div>
 </main>
