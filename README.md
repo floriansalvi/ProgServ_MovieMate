@@ -65,7 +65,7 @@ La majorité des points mentionnés dans la section "3. Besoins et fonctionnalit
 - Certains éléments, comme la validation du formulaire signup ou update profile, l'affichage des films dans la page index ou movies, … se répètetent. Nous aurions pu créer des classes suplémentaires pour éviter ces répétitions mais le temps nous le permettait pas. Le fait de ne pas avoir pu faire de réelles maquettes du site avant son implémentation n'a pas aidé à anticiper et à avoir une vue d'ensemble sur ce que nous allions devoir implémenter.
 - Javascript a été uiquement utilisé pour rendre des div entière cliquable sans devoir les imbriquer dans des balises <a> (onclick="")
 
-Mallory Bossel, Colin Schmutz, Florian Salvi
+Florian Salvi
 M52-2
 HEIG-VD
 Janvier 2025
