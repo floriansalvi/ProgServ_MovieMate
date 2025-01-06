@@ -33,7 +33,7 @@ require_once './config/base_url.php';
                     </ul>
                 </div>
             </li>
-            <?php if(isset($_SESSION['is_logged']) && !empty($_SESSION['user']['role'])): ?>
+            <?php if(isset($_SESSION['is_logged']) && $_SESSION['user']['role'] === 'admin'): ?>
                 <li><a href="<?= BASE_URL ?>admin.php">Admin</a></li>
             <?php endif; ?>
         </ul>

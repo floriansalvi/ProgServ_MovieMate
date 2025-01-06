@@ -166,7 +166,7 @@ if(filter_has_var(INPUT_POST, 'movie')) {
         }else{
             // Save the movie details in the database.
             $dbMovie->saveMovie($title, $description, $realisator, $releaseDate, $duration, $genreId, $coverName);
-            $successMessage = '<div class="alert alert-sucess">Le film a été publié.</div>';
+            $successMessage = '<div class="alert alert-success">Le film a été publié.</div>';
         }
     }
 }
